@@ -1,47 +1,52 @@
-import { useState } from "react"
-import { useLocation } from "react-router-dom"
+import { FaUser } from "react-icons/fa"
+import { Link } from "react-router-dom"
 
-export const Navbar = () => {
-  const [activeTab, setActiveTab] = useState("Homepage")
-
-  const location = useLocation()
-
-  if (
-    location.pathname === "/" ||
-    location.pathname === "/login" ||
-    location.pathname === "/cadastro"
-  ) {
-    return null
-  }
-
-  const navLinks = [
-    "Homepage",
-    "Foods",
-    "Today Offers",
-    "Contact us",
-    "About us",
-  ]
-
+const Navbar = () => {
   return (
-    <header className="flex w-full flex-col items-center border-b bg-[url('/img/banner/bgmenu.avif')] bg-cover bg-center bg-no-repeat py-6 text-green-800">
-      <div className="mb-6">
-        <img className="w-30" src="/img/logo/logo.png" alt="Logo Nutrigo" />
-      </div>
+    <nav className="fixed top-0 left-0 z-50 w-full bg-white font-sans shadow-sm">
+      <div className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+        {/* Área curva da logo */}
+        <div className="absolute top-0 left-0 flex h-30 w-64 items-center justify-center rounded-b-[200px] bg-white">
+          <img
+            src="/img/logo/logo.png"
+            alt="Fit Delivery Logo"
+            className="w-38 object-contain"
+          />
+        </div>
 
-      <nav className="w-full max-w-4xl">
-        <ul className="flex items-center justify-between px-8 md:px-16">
-          {navLinks.map((link) => (
-            <li key={link}>
-              <button
-                onClick={() => setActiveTab(link)}
-                className={`cursor-pointer text-sm font-medium transition-colors duration-300 hover:text-yellow-500 md:text-base ${activeTab === link ? "text-yellow-600" : "text-green-800"}`}
-              >
-                {link}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </header>
+        {/* Espaço para compensar a curva */}
+        <div className="w-24"></div>
+
+        {/* Menu */}
+        <div className="hidden items-center gap-6 md:flex">
+          <Link className="text-green-800 hover:text-yellow-600" to="/">
+            Home
+          </Link>
+          <Link className="text-green-800 hover:text-yellow-600" to="/sobre">
+            Sobre
+          </Link>
+          <Link
+            className="text-green-800 hover:text-yellow-600"
+            to={"/pedidos"}
+          >
+            Pedidos
+          </Link>
+          <Link
+            className="text-green-800 hover:text-yellow-600"
+            to={"/estabelecimentos"}
+          >
+            Estabelecimentos
+          </Link>
+          <Link
+            className="rounded-full border-2 border-green-800 p-2 text-green-800 hover:border-yellow-600 hover:text-yellow-600"
+            to={"/login"}
+          >
+            <FaUser />
+          </Link>
+        </div>
+      </div>
+    </nav>
   )
 }
+
+export default Navbar

@@ -1,25 +1,16 @@
-import { Link, useLocation } from "react-router-dom"
 import {
   FacebookLogoIcon,
   GithubLogoIcon,
   InstagramLogoIcon,
   TwitterLogoIcon,
 } from "@phosphor-icons/react"
+import { Link } from "react-router-dom"
 
 export function Footer() {
   const data = new Date().getFullYear()
-  const location = useLocation()
-
-  if (
-    location.pathname === "/" ||
-    location.pathname === "/login" ||
-    location.pathname === "/cadastro"
-  ) {
-    return null
-  }
 
   return (
-    <footer className="bg-white">
+    <footer className="z-50 bg-white">
       <div className="mx-auto max-w-7xl space-y-8 px-4 py-16 sm:px-6 lg:space-y-16 lg:px-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           {/* <div className="text-teal-600">
