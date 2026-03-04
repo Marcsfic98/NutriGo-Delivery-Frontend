@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createContext, useState, type ReactNode } from "react"
-import type UsuarioLogin from "../models/UsuarioLogin"
 import type Usuario from "../models/Usuario"
-import { ToastAlerta } from "../util/ToastAlerta"
+import type UsuarioLogin from "../models/UsuarioLogin"
 import { login } from "../services/Service"
+import { ToastAlerta } from "../util/ToastAlerta"
 
 interface UsuarioComToken extends Usuario {
   token: string
