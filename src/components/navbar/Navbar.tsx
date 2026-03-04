@@ -1,7 +1,18 @@
 import { useState } from "react"
+import { useLocation } from "react-router-dom"
 
 export const Navbar = () => {
   const [activeTab, setActiveTab] = useState("Homepage")
+
+  const location = useLocation()
+
+  if (
+    location.pathname === "/" ||
+    location.pathname === "/login" ||
+    location.pathname === "/cadastro"
+  ) {
+    return null
+  }
 
   const navLinks = [
     "Homepage",
@@ -14,7 +25,7 @@ export const Navbar = () => {
   return (
     <header className="flex w-full flex-col items-center border-b bg-[url('/img/banner/bgmenu.avif')] bg-cover bg-center bg-no-repeat py-6 text-green-800">
       <div className="mb-6">
-        <img className="w-30" src="/img/logo/logo.png" />
+        <img className="w-30" src="/img/logo/logo.png" alt="Logo Nutrigo" />
       </div>
 
       <nav className="w-full max-w-4xl">

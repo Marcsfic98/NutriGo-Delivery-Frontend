@@ -10,7 +10,11 @@ export function Footer() {
   const data = new Date().getFullYear()
   const location = useLocation()
 
-  if (location.pathname === "/login" || location.pathname === "/cadastro") {
+  if (
+    location.pathname === "/" ||
+    location.pathname === "/login" ||
+    location.pathname === "/cadastro"
+  ) {
     return null
   }
 
