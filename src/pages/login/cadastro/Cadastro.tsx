@@ -70,7 +70,7 @@ export function Cadastro() {
   return (
     <>
       <div className="grid h-screen grid-cols-1 place-items-center font-bold lg:grid-cols-2">
-        <div className="hidden min-h-screen w-full bg-[url('https://i.imgur.com/ZZFAmzo.jpg')] bg-cover bg-center bg-no-repeat lg:block"></div>
+        {/* <div className="hidden min-h-screen w-full bg-[url('https://i.imgur.com/ZZFAmzo.jpg')] bg-cover bg-center bg-no-repeat lg:block"></div> */}
         <form
           className="flex w-2/3 flex-col items-center justify-center gap-3"
           onSubmit={cadastrarNovoUsuario}

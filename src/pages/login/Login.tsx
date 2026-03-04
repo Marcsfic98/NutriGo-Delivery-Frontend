@@ -97,7 +97,7 @@ export function Login() {
             </Link>
           </p>
         </form>
-        <div className="hidden min-h-screen w-full bg-[url('https://i.imgur.com/ZZFAmzo.jpg')] bg-cover bg-center bg-no-repeat lg:block"></div>
+        {/* <div className="hidden min-h-screen w-full bg-[url('https://i.imgur.com/ZZFAmzo.jpg')] bg-cover bg-center bg-no-repeat lg:block"></div> */}
       </div>
     </>
   )
