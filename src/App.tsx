@@ -9,6 +9,8 @@ import Estabelecimentos from "./pages/Estabelecimentos"
 import { Home } from "./pages/Home"
 import { Login } from "./pages/Login"
 import Produtos from "./pages/Produtos"
+import CardProduto from "./components/cardprodutos/CardProduto"
+
 
 export function App() {
   return (
@@ -22,6 +24,7 @@ export function App() {
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/home" element={<Home />} />
           <Route path="/produtos" element={<Produtos />} />
+          <Route path="/cardproduto" element={<CardProduto />} />
           <Route path="/estabelecimentos" element={<Estabelecimentos />} />
         </Routes>
         <Footer />

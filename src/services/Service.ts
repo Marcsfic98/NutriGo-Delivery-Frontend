@@ -7,7 +7,7 @@ import axios from "axios";
 // });
 
 const api = axios.create({
-  baseURL: "https://nutrigo-delivery.onrender.com"
+  baseURL: "https://aplicativo-de-delivery-backend-1.onrender.com/swagger"
 });
 
 export const cadastrarUsuario = async (
