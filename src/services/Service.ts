@@ -7,7 +7,7 @@ import axios from "axios";
 // });
 
 const api = axios.create({
-  baseURL: "https://nutrigo-delivery.onrender.com"
+  baseURL: "https://aplicativo-de-delivery-backend-1.onrender.com"
 });
 
 export const cadastrarUsuario = async (
@@ -29,9 +29,8 @@ export const login = async (url: string, dados: Object, setDados: Function) => {
 export const buscar = async (
   url: string,
   setDados: Function,
-  header: Object,
 ) => {
-  const resposta = await api.get(url, header);
+  const resposta = await api.get(url);
   setDados(resposta.data);
 };
 

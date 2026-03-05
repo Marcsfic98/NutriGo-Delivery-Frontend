@@ -1,15 +1,22 @@
 import { ChevronRight, Info, MapPin, ShoppingCart, Star, X } from "lucide-react"
+import type Produto from "../models/Produto"
 
-const ProdutoDetalhe = ({ produto, onClose }) => {
+type FlatProduto = Produto & { categoriaNome: string }
+
+interface ProdutoDetalheProps {
+  produto: FlatProduto | null
+  onClose: () => void
+}
+
+const ProdutoDetalhe = ({ produto, onClose }: ProdutoDetalheProps) => {
   if (!produto) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-0 backdrop-blur-sm sm:items-center sm:p-4">
       <div className="animate-in slide-in-from-bottom max-h-[95vh] w-full max-w-2xl overflow-hidden overflow-y-auto rounded-t-3xl bg-white duration-300 sm:rounded-3xl">
-        {/* Header da Imagem */}
         <div className="relative h-64 sm:h-80">
           <img
-            src={produto.img}
+            src={produto.foto_produto}
             alt={produto.nome}
             className="h-full w-full object-cover"
           />
@@ -21,12 +28,11 @@ const ProdutoDetalhe = ({ produto, onClose }) => {
           </button>
         </div>
 
-        {/* Conteúdo */}
         <div className="p-6">
           <div className="mb-4 flex items-start justify-between">
             <div>
               <span className="text-xs font-bold tracking-widest text-green-600 uppercase">
-                {produto.cat}
+                {produto.categoriaNome}{" "}
               </span>
               <h2 className="text-2xl leading-tight font-black text-gray-900">
                 {produto.nome}
@@ -34,7 +40,7 @@ const ProdutoDetalhe = ({ produto, onClose }) => {
             </div>
             <div className="text-right">
               <span className="text-2xl font-black text-green-700">
-                R$ {produto.preco.toFixed(2)}
+                R$ {Number(produto.preco).toFixed(2)}
               </span>
             </div>
           </div>
@@ -64,7 +70,7 @@ const ProdutoDetalhe = ({ produto, onClose }) => {
             </h5>
             <p className="text-sm leading-relaxed text-gray-600">
               {produto.descricao ||
-                "Preparado com ingredientes orgânicos e selecionados. Nosso salmão é grelhado no azeite de oliva extra virgem, acompanhado de vegetais frescos no vapor. Ideal para quem busca uma refeição leve, nutritiva e rica em Ômega 3."}
+                "Preparado com ingredientes orgânicos e selecionados. Ideal para quem busca uma refeição leve e nutritiva."}
             </p>
           </div>
 
@@ -74,7 +80,7 @@ const ProdutoDetalhe = ({ produto, onClose }) => {
                 Calorias
               </span>
               <span className="text-sm font-black text-orange-700">
-                {produto.cal} kcal
+                {produto.calorias || 0} kcal
               </span>
             </div>
             <div className="rounded-2xl border border-blue-100 bg-blue-50 p-3 text-center">
@@ -82,9 +88,10 @@ const ProdutoDetalhe = ({ produto, onClose }) => {
                 Proteínas
               </span>
               <span className="text-sm font-black text-blue-700">
-                {produto.protein}
+                {produto.proteinas || "0g"}
               </span>
             </div>
+
             <div className="rounded-2xl border border-green-100 bg-green-50 p-3 text-center">
               <span className="block text-[10px] font-bold text-green-400 uppercase">
                 Carbos
@@ -99,9 +106,9 @@ const ProdutoDetalhe = ({ produto, onClose }) => {
             </div>
           </div>
 
-          <button className="flex w-full items-center justify-center gap-3 rounded-2xl bg-green-600 py-4 font-bold text-white shadow-lg shadow-green-100 transition-all hover:bg-green-700 active:scale-[0.98]">
+          <button className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl bg-green-600 py-4 font-bold text-white shadow-lg shadow-green-100 transition-all hover:bg-green-700 active:scale-[0.98]">
             <ShoppingCart size={20} />
-            Adicionar ao Pedido • R$ {produto.preco.toFixed(2)}
+            Adicionar ao Pedido • R$ {Number(produto.preco).toFixed(2)}
           </button>
         </div>
       </div>

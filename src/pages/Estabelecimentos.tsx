@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/immutability */
+
 import { useContext, useEffect, useState } from "react"
+import { SyncLoader } from "react-spinners"
+import CardEstabelecimento from "../components/cardestabelecimento/CardEstabelecimento"
 import { AuthContext } from "../contexts/AuthContext"
-import { ToastAlerta } from "../util/ToastAlerta"
-import { useNavigate } from "react-router-dom"
 import type Estabelecimento from "../models/Estabelecimento"
 import { buscar } from "../services/Service"
-import CardEstabelecimento from "../components/cardestabelecimento/CardEstabelecimento"
-import { SyncLoader } from "react-spinners"
 
 function Estabelecimentos() {
-  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [estabelecimentos, setEstabelecimentos] = useState<Estabelecimento[]>(
     [],
@@ -20,19 +17,12 @@ function Estabelecimentos() {
   const token = usuario.token
 
   useEffect(() => {
-    if (token === "") {
-      ToastAlerta("Você precisa estar logado", "info")
-      navigate("/")
-    }
-  }, [token])
-
-  useEffect(() => {
     buscarEstabelecimentos()
   }, [])
 
   async function buscarEstabelecimentos() {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       await buscar("/estabelecimentos", setEstabelecimentos, {
         headers: { Authorization: token },
       })
