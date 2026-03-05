@@ -9,6 +9,8 @@ import Estabelecimentos from "./pages/Estabelecimentos"
 import { Home } from "./pages/Home"
 import { Login } from "./pages/Login"
 import Produtos from "./pages/Produtos"
+import { Sobre } from "./pages/Sobre"
+import { Contato } from "./pages/Contato"
 
 export function App() {
   return (
@@ -23,6 +25,8 @@ export function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/produtos" element={<Produtos />} />
           <Route path="/estabelecimentos" element={<Estabelecimentos />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route path="/contato" element={<Contato />} />
         </Routes>
         <Footer />
       </BrowserRouter>
