@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext"
 import type Pedido from "../../models/Pedido"
 import { buscarPedidos } from "../../services/PedidoService"
@@ -29,6 +31,13 @@ function ListaPedidos() {
   return (
     <div className="container mx-auto mt-10">
       <h1 className="mb-6 text-3xl font-bold">Lista de Pedidos</h1>
+
+      <Link
+        to="/cadastrarPedido"
+        className="mb-6 inline-block rounded bg-green-600 px-4 py-2 text-white hover:opacity-90"
+      >
+        Cadastrar Pedido
+      </Link>
 
       {pedidos.length === 0 ? (
         <p>Nenhum pedido encontrado.</p>
