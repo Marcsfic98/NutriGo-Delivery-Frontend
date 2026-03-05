@@ -4,6 +4,7 @@ import { AuthContext } from "../../contexts/AuthContext"
 import type Pedido from "../../models/Pedido"
 import { buscarPedidoPorId, deletarPedido } from "../../services/PedidoService"
 import { ToastAlerta } from "../../util/ToastAlerta"
+import { classeStatusBadge, formatarMoeda } from "./pedidoUtils"
 
 function DeletarPedido() {
   const navigate = useNavigate()
@@ -15,27 +16,37 @@ function DeletarPedido() {
   useEffect(() => {
     async function carregar() {
       if (!usuario.token) {
-        ToastAlerta("Você precisa estar logado!", "info")
+        ToastAlerta("Voce precisa estar logado!", "info")
         navigate("/login")
         return
       }
 
-      if (id) {
-        try {
-          await buscarPedidoPorId(Number(id), usuario.token, setPedido)
-        } catch (error) {
-          console.error(error)
-          ToastAlerta("Pedido não encontrado!", "erro")
-          navigate("/pedidos")
-        }
+      if (!id) {
+        ToastAlerta("Pedido nao encontrado!", "erro")
+        navigate("/pedidos")
+        return
+      }
+
+      try {
+        await buscarPedidoPorId(Number(id), usuario.token, setPedido)
+      } catch (error) {
+        console.error(error)
+        ToastAlerta("Pedido nao encontrado!", "erro")
+        navigate("/pedidos")
       }
     }
 
     carregar()
-  }, [])
+  }, [id, navigate, usuario.token])
 
   async function confirmarDelete() {
     if (!id) return
+
+    if (!usuario.token) {
+      ToastAlerta("Voce precisa estar logado!", "info")
+      navigate("/login")
+      return
+    }
 
     try {
       await deletarPedido(usuario.token, Number(id))
@@ -48,32 +59,54 @@ function DeletarPedido() {
   }
 
   return (
-    <div className="container mx-auto mt-10 max-w-xl">
-      <h1 className="mb-6 text-3xl font-bold">Deletar Pedido</h1>
+    <div className="min-h-[calc(100vh-8rem)] bg-gradient-to-b from-rose-50/70 via-white to-white pb-16 pt-32">
+      <div className="mx-auto w-full max-w-2xl px-4">
+        <section className="overflow-hidden rounded-3xl border border-rose-100 bg-white shadow-sm">
+          <header className="bg-gradient-to-r from-rose-600 to-rose-500 px-6 py-6 text-white sm:px-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-rose-100">
+              Acao critica
+            </p>
+            <h1 className="mt-2 text-3xl font-black tracking-tight">Confirmar exclusao</h1>
+            <p className="mt-2 text-sm text-rose-100">
+              Esta acao remove o pedido permanentemente e nao pode ser desfeita.
+            </p>
+          </header>
 
-      <div className="rounded border bg-white p-4 shadow">
-        <p className="mb-2">
-          Tem certeza que deseja deletar o pedido <b>#{pedido.id}</b>?
-        </p>
+          <div className="space-y-5 p-6 sm:p-8">
+            <div className="rounded-2xl border border-rose-100 bg-rose-50/70 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-rose-500">Pedido</p>
+              <p className="mt-2 text-xl font-black text-zinc-800">#{pedido.id}</p>
 
-        <p className="mb-2">Status: {pedido.status}</p>
-        <p className="mb-4">Valor total: R$ {pedido.valor_total}</p>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span
+                  className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${classeStatusBadge(pedido.status)}`}
+                >
+                  {pedido.status}
+                </span>
 
-        <div className="flex gap-2">
-          <button
-            onClick={confirmarDelete}
-            className="rounded bg-red-600 px-4 py-2 text-white hover:opacity-90"
-          >
-            Sim, deletar
-          </button>
+                <span className="inline-flex rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-600">
+                  {formatarMoeda(pedido.valor_total)}
+                </span>
+              </div>
+            </div>
 
-          <button
-            onClick={() => navigate("/pedidos")}
-            className="rounded bg-gray-400 px-4 py-2 text-white hover:opacity-90"
-          >
-            Cancelar
-          </button>
-        </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button
+                onClick={confirmarDelete}
+                className="inline-flex items-center justify-center rounded-xl bg-rose-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-rose-200 transition hover:-translate-y-0.5 hover:bg-rose-700"
+              >
+                Sim, deletar pedido
+              </button>
+
+              <button
+                onClick={() => navigate("/pedidos")}
+                className="inline-flex items-center justify-center rounded-xl border border-zinc-300 bg-white px-6 py-3 text-sm font-bold text-zinc-600 transition hover:bg-zinc-50"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   )
