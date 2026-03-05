@@ -25,11 +25,11 @@ function FormPedido() {
 
   useEffect(() => {
     async function carregar() {
-      if (!usuario.token) {
-        ToastAlerta("Você precisa estar logado!", "info")
-        navigate("/login")
-        return
-      }
+      //if (!usuario.token) {
+      //  ToastAlerta("Você precisa estar logado!", "info")
+      //  navigate("/login")
+      //  return
+      //}
 
       if (id) {
         await buscarPedidoPorId(Number(id), usuario.token, setPedido)

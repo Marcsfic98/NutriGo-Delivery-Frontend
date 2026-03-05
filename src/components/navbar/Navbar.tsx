@@ -37,6 +37,14 @@ const Navbar = () => {
           >
             Estabelecimentos
           </Link>
+
+          <Link
+            className="text-green-800 hover:text-yellow-600"
+            to={"/pedidos"}
+          >
+            Pedidos
+          </Link>
+
           <Link
             className="rounded-full border-2 border-green-800 p-2 text-green-800 hover:border-yellow-600 hover:text-yellow-600"
             to={"/login"}

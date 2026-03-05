@@ -12,10 +12,10 @@ function ListaPedidos() {
   const [pedidos, setPedidos] = useState<Pedido[]>([])
 
   async function carregarPedidos() {
-    if (!usuario.token) {
-      alert("Você precisa estar logado!")
-      return
-    }
+    //if (!usuario.token) {
+    //  alert("Você precisa estar logado!")
+    //  return
+    //}
 
     try {
       await buscarPedidos(usuario.token, setPedidos)
