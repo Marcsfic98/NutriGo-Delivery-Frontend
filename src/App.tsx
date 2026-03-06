@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { Footer } from "./components/footer/Footer"
+import { FormProduto } from "./components/formproduto/FormProduto"
 import { Navbar } from "./components/navbar/Navbar"
 import { ScrollToTop } from "./components/ScrollToTop"
 import { AuthProvider } from "./contexts/AuthContext"
@@ -7,14 +8,14 @@ import { Cadastro } from "./pages/Cadastro"
 import { Estabelecimentos } from "./pages/Estabelecimentos"
 import { Home } from "./pages/Home"
 import { Login } from "./pages/Login"
-import { Produtos } from "./pages/Produtos"
 import { Perfil } from "./pages/Perfil"
-import { FormProduto } from "./components/formproduto/FormProduto"
-import { Sobre } from "./pages/Sobre"
+import { Produtos } from "./pages/Produtos"
 import { Contato } from "./pages/Contato"
-import ListaPedidos from "./pages/pedido/ListaPedidos"
-import FormPedido from "./pages/pedido/FormPedido"
 import DeletarPedido from "./pages/pedido/DeletarPedido"
+import FormPedido from "./pages/pedido/FormPedido"
+import ListaPedidos from "./pages/pedido/ListaPedidos"
+import { Sobre } from "./pages/Sobre"
+
 
 export function App() {
   return (
@@ -31,7 +32,6 @@ export function App() {
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/produtos" element={<Produtos />} />
-          {/* <Route path="/cardproduto" element={< />} /> */}
           <Route path="/cadastrarproduto" element={<FormProduto />} />
           <Route path="/editarproduto" element={<FormProduto />} />
           <Route path="/estabelecimentos" element={<Estabelecimentos />} />
