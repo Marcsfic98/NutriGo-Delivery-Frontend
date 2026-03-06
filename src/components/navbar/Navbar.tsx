@@ -59,6 +59,9 @@ export const Navbar = () => {
           >
             Estabelecimentos
           </Link>
+          <Link className="text-green-800 hover:text-yellow-600" to="/pedidos">
+            Pedidos
+          </Link>
 
           {usuario.token ? (
             <div className="flex items-center gap-4 border-l border-green-200 pl-4">
@@ -124,6 +127,13 @@ export const Navbar = () => {
               to="/estabelecimentos"
             >
               Estabelecimentos
+            </Link>
+            <Link
+              onClick={() => setIsMenuOpen(false)}
+              className="text-green-800"
+              to="/pedidos"
+            >
+              Pedidos
             </Link>
             <hr className="border-green-100" />
             {usuario.token ? (

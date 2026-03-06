@@ -16,13 +16,13 @@ function DeletarPedido() {
   useEffect(() => {
     async function carregar() {
       if (!usuario.token) {
-        ToastAlerta("Voce precisa estar logado!", "info")
+        ToastAlerta("Você precisa estar logado!", "info")
         navigate("/login")
         return
       }
 
       if (!id) {
-        ToastAlerta("Pedido nao encontrado!", "erro")
+        ToastAlerta("Pedido não encontrado!", "erro")
         navigate("/pedidos")
         return
       }
@@ -31,7 +31,7 @@ function DeletarPedido() {
         await buscarPedidoPorId(Number(id), usuario.token, setPedido)
       } catch (error) {
         console.error(error)
-        ToastAlerta("Pedido nao encontrado!", "erro")
+        ToastAlerta("Pedido nãoo encontrado!", "erro")
         navigate("/pedidos")
       }
     }
@@ -43,7 +43,7 @@ function DeletarPedido() {
     if (!id) return
 
     if (!usuario.token) {
-      ToastAlerta("Voce precisa estar logado!", "info")
+      ToastAlerta("Você precisa estar logado!", "info")
       navigate("/login")
       return
     }
@@ -63,18 +63,19 @@ function DeletarPedido() {
       <div className="mx-auto w-full max-w-2xl px-4">
         <section className="overflow-hidden rounded-3xl border border-rose-100 bg-white shadow-sm">
           <header className="bg-gradient-to-r from-rose-600 to-rose-500 px-6 py-6 text-white sm:px-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-rose-100">
-              Acao critica
-            </p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight">Confirmar exclusao</h1>
+            <h1 className="mt-2 text-3xl font-black tracking-tight">
+              {"Confirmar exclusão"}
+            </h1>
             <p className="mt-2 text-sm text-rose-100">
-              Esta acao remove o pedido permanentemente e nao pode ser desfeita.
+              {"Esta ação remove o pedido permanentemente e não pode ser desfeita."}
             </p>
           </header>
 
           <div className="space-y-5 p-6 sm:p-8">
             <div className="rounded-2xl border border-rose-100 bg-rose-50/70 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-rose-500">Pedido</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-rose-500">
+                Pedido
+              </p>
               <p className="mt-2 text-xl font-black text-zinc-800">#{pedido.id}</p>
 
               <div className="mt-4 flex flex-wrap items-center gap-2">

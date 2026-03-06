@@ -1,19 +1,57 @@
+import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext"
+import type Estabelecimento from "../../models/Estabelecimento"
 import type Pedido from "../../models/Pedido"
 import {
   atualizarPedido,
   buscarPedidoPorId,
   cadastrarPedido,
 } from "../../services/PedidoService"
+import { buscar } from "../../services/Service"
 import { ToastAlerta } from "../../util/ToastAlerta"
 import { statusOptions } from "./pedidoUtils"
+
+const authHeader = (token: string) => ({
+  headers: {
+    Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
+  },
+})
+
+function extrairId(entidade: unknown) {
+  if (
+    typeof entidade === "object" &&
+    entidade !== null &&
+    "id" in entidade &&
+    typeof (entidade as { id?: unknown }).id === "number"
+  ) {
+    const id = (entidade as { id: number }).id
+    return id > 0 ? id : 0
+  }
+
+  return 0
+}
+
+function extrairNumero(valor: unknown) {
+  if (typeof valor === "number" && Number.isFinite(valor)) return valor
+
+  if (typeof valor === "string") {
+    const convertido = Number(valor)
+    return Number.isFinite(convertido) ? convertido : NaN
+  }
+
+  return NaN
+}
 
 function FormPedido() {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const { usuario } = useContext(AuthContext)
+
+  const [estabelecimentos, setEstabelecimentos] = useState<Estabelecimento[]>([])
+  const [carregandoEstabelecimentos, setCarregandoEstabelecimentos] =
+    useState<boolean>(false)
 
   const [pedido, setPedido] = useState<Pedido>({
     valor_total: 0,
@@ -31,9 +69,39 @@ function FormPedido() {
         return
       }
 
+      try {
+        setCarregandoEstabelecimentos(true)
+        await buscar(
+          "/estabelecimentos",
+          setEstabelecimentos,
+          authHeader(usuario.token),
+        )
+      } catch (error) {
+        console.error(error)
+        ToastAlerta("Erro ao carregar estabelecimentos!", "erro")
+      } finally {
+        setCarregandoEstabelecimentos(false)
+      }
+
       if (id) {
         try {
-          await buscarPedidoPorId(Number(id), usuario.token, setPedido)
+          await buscarPedidoPorId(Number(id), usuario.token, (dadosPedido) => {
+            const idUsuarioPedido = extrairId(dadosPedido.usuario)
+            const idEstabelecimentoPedido = extrairId(dadosPedido.estabelecimento)
+            const statusPedido = statusOptions.includes(dadosPedido.status)
+              ? dadosPedido.status
+              : statusOptions[0]
+            const valorTotalPedido = extrairNumero(dadosPedido.valor_total)
+
+            setPedido({
+              ...dadosPedido,
+              id: dadosPedido.id ?? Number(id),
+              status: statusPedido,
+              valor_total: Number.isNaN(valorTotalPedido) ? 0 : valorTotalPedido,
+              usuario: { id: idUsuarioPedido || usuario.id },
+              estabelecimento: { id: idEstabelecimentoPedido },
+            })
+          })
         } catch (error) {
           console.error(error)
           ToastAlerta("Pedido nao encontrado!", "erro")
@@ -60,12 +128,33 @@ function FormPedido() {
     setPedido({ ...pedido, status: e.target.value as Pedido["status"] })
   }
 
-  function atualizarEstabelecimentoId(e: React.ChangeEvent<HTMLInputElement>) {
-    const valor = e.target.value
+  function atualizarEstabelecimentoId(e: React.ChangeEvent<HTMLSelectElement>) {
+    const idEstabelecimento = Number(e.target.value)
+
     setPedido({
       ...pedido,
-      estabelecimento: { id: valor === "" ? 0 : Number(valor) },
+      estabelecimento: { id: Number.isNaN(idEstabelecimento) ? 0 : idEstabelecimento },
     })
+  }
+
+  function mensagemErroPedido(error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status
+      const data = error.response?.data
+
+      const mensagemApi =
+        (typeof data === "string" && data) ||
+        (data as { message?: string })?.message ||
+        (data as { erro?: string })?.erro
+
+      if (mensagemApi) return mensagemApi
+      if (status === 400) return "Dados invalidos para salvar pedido."
+      if (status === 401 || status === 403)
+        return "Sessao expirada. Faca login novamente."
+      if (status === 404) return "Usuario ou estabelecimento nao encontrado."
+    }
+
+    return "Erro ao salvar o pedido!"
   }
 
   async function enviar(e: React.FormEvent<HTMLFormElement>) {
@@ -77,9 +166,26 @@ function FormPedido() {
       return
     }
 
+    if (pedido.estabelecimento.id <= 0) {
+      ToastAlerta("Selecione um estabelecimento valido.", "info")
+      return
+    }
+
+    const idUsuarioPedido = extrairId(pedido.usuario)
+    const idUsuarioParaSalvar = id ? idUsuarioPedido || usuario.id : usuario.id
+    const valorTotalParaSalvar = extrairNumero(pedido.valor_total)
+
+    if (Number.isNaN(valorTotalParaSalvar) || valorTotalParaSalvar < 0) {
+      ToastAlerta("Informe um valor total valido.", "info")
+      return
+    }
+
     const pedidoParaSalvar: Pedido = {
       ...pedido,
-      usuario: { id: usuario.id },
+      id: pedido.id ?? (id ? Number(id) : undefined),
+      valor_total: valorTotalParaSalvar,
+      usuario: { id: idUsuarioParaSalvar },
+      estabelecimento: { id: pedido.estabelecimento.id },
     }
 
     try {
@@ -94,9 +200,15 @@ function FormPedido() {
       navigate("/pedidos")
     } catch (error) {
       console.error(error)
-      ToastAlerta("Erro ao salvar o pedido!", "erro")
+      ToastAlerta(mensagemErroPedido(error), "erro")
     }
   }
+
+  const estabelecimentoSelecionadoNaoExiste =
+    pedido.estabelecimento.id > 0 &&
+    !estabelecimentos.some(
+      (estabelecimento) => estabelecimento.id === pedido.estabelecimento.id,
+    )
 
   return (
     <div className="min-h-[calc(100vh-8rem)] bg-gradient-to-b from-emerald-50/70 via-white to-white pb-16 pt-32">
@@ -116,7 +228,9 @@ function FormPedido() {
 
           <form onSubmit={enviar} className="grid gap-5 p-6 sm:grid-cols-2 sm:p-8">
             <label className="flex flex-col gap-2 sm:col-span-2">
-              <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">Valor total</span>
+              <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">
+                Valor total
+              </span>
               <input
                 type="number"
                 name="valor_total"
@@ -131,7 +245,9 @@ function FormPedido() {
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">Status</span>
+              <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">
+                Status
+              </span>
               <select
                 name="status"
                 value={pedido.status}
@@ -147,7 +263,9 @@ function FormPedido() {
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">Usuario logado</span>
+              <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">
+                Usuario logado
+              </span>
               <input
                 type="text"
                 value={usuario.nome || `ID ${usuario.id}`}
@@ -158,16 +276,37 @@ function FormPedido() {
 
             <label className="flex flex-col gap-2 sm:col-span-2">
               <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-                ID do Estabelecimento
+                Estabelecimento
               </span>
-              <input
-                type="number"
-                value={pedido.estabelecimento.id === 0 ? "" : pedido.estabelecimento.id}
+              <select
+                value={
+                  pedido.estabelecimento.id === 0
+                    ? ""
+                    : String(pedido.estabelecimento.id)
+                }
                 onChange={atualizarEstabelecimentoId}
                 className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-800 outline-none transition focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100"
-                min="1"
                 required
-              />
+                disabled={carregandoEstabelecimentos}
+              >
+                <option value="">
+                  {carregandoEstabelecimentos
+                    ? "Carregando estabelecimentos..."
+                    : "Selecione um estabelecimento"}
+                </option>
+
+                {estabelecimentoSelecionadoNaoExiste && (
+                  <option value={pedido.estabelecimento.id}>
+                    Estabelecimento atual (ID {pedido.estabelecimento.id})
+                  </option>
+                )}
+
+                {estabelecimentos.map((estabelecimento) => (
+                  <option key={estabelecimento.id} value={estabelecimento.id}>
+                    {estabelecimento.nome}
+                  </option>
+                ))}
+              </select>
             </label>
 
             <div className="flex flex-col gap-3 pt-2 sm:col-span-2 sm:flex-row">
