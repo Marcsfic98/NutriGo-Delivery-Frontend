@@ -59,7 +59,7 @@ export const Navbar = () => {
 
           <Link className="text-green-800 hover:text-yellow-600" to="/Sobre">
             Sobre
-
+          </Link>
           <Link className="text-green-800 hover:text-yellow-600" to="/pedidos">
             Pedidos
           </Link>
