@@ -11,5 +11,5 @@ export default interface Estabelecimento {
   taxa_entrega: number
   produto?: Produto[]
   pedido?: Pedido[]
-  usuario?: Usuario[]
+  usuario?: Usuario
 }

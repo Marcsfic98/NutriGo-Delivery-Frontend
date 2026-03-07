@@ -9,5 +9,5 @@ export default interface Usuario {
   foto: string
   tipo: string
   pedido?: Pedido[]
-  estabelecimento?: Estabelecimento
+  estabelecimento?: Estabelecimento[]
 }

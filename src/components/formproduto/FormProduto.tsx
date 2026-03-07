@@ -97,9 +97,10 @@ export function FormProduto() {
         categoria: { id: Number(value), nome: "", produto: [] },
       })
     } else if (name === "estabelecimento") {
+      const est = estabelecimentos.find((e) => e.id === Number(value))
       setProduto({
         ...produto,
-        estabelecimento: { id: Number(usuario.id), nome: "" } as Estabelecimento,
+        estabelecimento: est || undefined, // passa o objeto completo
       })
     } else {
       setProduto({
@@ -144,6 +145,7 @@ export function FormProduto() {
           {id !== undefined ? "Editar Produto" : "Cadastrar Produto"}
         </h1>
 
+        {/* Nome do Produto */}
         <div className="flex flex-col">
           <label className="font-bold text-gray-700">Nome do Produto</label>
           <input
@@ -156,6 +158,7 @@ export function FormProduto() {
           />
         </div>
 
+        {/* Descrição */}
         <div className="flex flex-col">
           <label className="font-bold text-gray-700">Descrição</label>
           <input
@@ -168,6 +171,7 @@ export function FormProduto() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* Preço */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Preço (R$)</label>
             <input
@@ -182,6 +186,7 @@ export function FormProduto() {
             />
           </div>
 
+          {/* Foto */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Foto (URL)</label>
             <input
@@ -194,6 +199,7 @@ export function FormProduto() {
             />
           </div>
 
+          {/* Calorias */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Calorias (kcal)</label>
             <input
@@ -205,6 +211,7 @@ export function FormProduto() {
             />
           </div>
 
+          {/* Proteinas */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Proteínas (g)</label>
             <input
@@ -216,6 +223,7 @@ export function FormProduto() {
             />
           </div>
 
+          {/* Carboridratos */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Carboidratos (g)</label>
             <input
@@ -228,6 +236,7 @@ export function FormProduto() {
             />
           </div>
 
+          {/* Gordura */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Gorduras (g)</label>
             <input
@@ -239,9 +248,8 @@ export function FormProduto() {
               required
             />
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* Categoria */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Categoria</label>
             <select
@@ -262,6 +270,31 @@ export function FormProduto() {
             </select>
           </div>
 
+          {/* estabelecimento */}
+          <div className="flex flex-col">
+            <label className="font-bold text-gray-700">Estabelecimento</label>
+            <select
+              name="estabelecimento"
+              value={produto.estabelecimento?.id || ""}
+              onChange={atualizarEstado}
+              className="rounded-lg border bg-white p-3 focus:border-green-600 focus:outline-none"
+              required
+            >
+              <option value="" disabled>
+                Selecione um Estabelecimento
+              </option>
+              {estabelecimentos
+                .filter(
+                  (estabelecimento) =>
+                    estabelecimento.usuario?.id === usuario.id,
+                ) // só mostra os do usuário
+                .map((estabelecimento) => (
+                  <option key={estabelecimento.id} value={estabelecimento.id}>
+                    {estabelecimento.nome}
+                  </option>
+                ))}
+            </select>
+          </div>
         </div>
 
         <div className="mt-4 flex justify-end gap-4">
