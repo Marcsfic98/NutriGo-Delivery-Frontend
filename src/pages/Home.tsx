@@ -103,7 +103,7 @@ export function Home() {
 
   return (
     <>
-      <div className="relative mt-16 flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[url('img/banner/bghome.jpg')] bg-cover bg-center bg-no-repeat px-4 py-20 text-white">
+      <div className="relative mt-16 flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[url('/img/banner/bghome.jpg')] bg-cover bg-center bg-no-repeat px-4 py-20 text-white">
         <div className="z-10 mb-10 text-center md:mb-20">
           <h2 className="text-2xl font-bold text-white transition-all duration-500 select-none md:text-4xl">
             {foodData[activeIndex]?.tamil}

@@ -87,7 +87,7 @@ export function Produtos() {
 
   return (
     <div className="mt-20 min-h-screen bg-gray-50 pb-20">
-      <div className="h-100 w-full bg-[url('img/banner/banner_suco.png')] bg-cover bg-no-repeat"></div>
+      <div className="h-100 w-full bg-[url('/img/banner/banner_suco.png')] bg-cover bg-no-repeat"></div>
 
       <div className="mt-0 w-full px-4">
         <div className="flex flex-col gap-6 rounded-3xl bg-white p-6 shadow-xl shadow-gray-200/50">
