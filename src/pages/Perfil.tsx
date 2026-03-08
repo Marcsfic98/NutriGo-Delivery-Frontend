@@ -6,8 +6,6 @@ import { AuthContext } from "../contexts/AuthContext"
 import { atualizar, cadastrar } from "../services/Service"
 import type Usuario from "../models/Usuario"
 import { Plus } from "lucide-react"
-import { Estabelecimentos } from "./Estabelecimentos"
-import CadastrarProdutos from "../components/botões/CadastrarProdutos"
 
 export function Perfil() {
   const navigate = useNavigate()
@@ -250,13 +248,6 @@ export function Perfil() {
           </div>
         </form>
       )}
-
-      {/* Estabelecimentos do usuario */}
-      <div className="rounded bg-white p-4">
-        <Estabelecimentos/>
-        
-        <div className="w-full bg-white"></div>
-      </div>
     </div>
   )
 
@@ -394,9 +385,8 @@ export function Perfil() {
               renderUsuarioPanel()}
           </>
         )}
-        <CadastrarProdutos/>
+        {/* <CadastrarProdutos /> */}
       </div>
-      
     </div>
   )
 }
