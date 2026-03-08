@@ -67,6 +67,7 @@ export function FormProduto() {
     async function buscarProdutoPorId(id: string) {
       try {
         await buscar(`/produtos/${id}`, setProduto)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         ToastAlerta("Produto não encontrado!", "erro")
         navigate("/produtos")
@@ -123,6 +124,7 @@ export function FormProduto() {
       }
 
       navigate("/produtos")
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       ToastAlerta("Erro ao salvar o produto", "erro")
     } finally {
@@ -230,6 +232,7 @@ export function FormProduto() {
                     <input
                       key={campo}
                       name={campo}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       value={(produto as any)[campo]}
                       onChange={atualizarEstado}
                       placeholder={campo}

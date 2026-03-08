@@ -1,21 +1,39 @@
-import { Plus } from "lucide-react"
-import { useContext, useEffect, useState, type ChangeEvent } from "react"
+import { Plus, Store, Trash2 } from "lucide-react"
+import {
+  useContext,
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from "react"
 import { useNavigate } from "react-router-dom"
 import { ClipLoader } from "react-spinners"
 import { AuthContext } from "../../contexts/AuthContext"
 import { buscar, cadastrar, deletar } from "../../services/Service"
 import { ToastAlerta } from "../../util/ToastAlerta"
 
+// 1. Interfaces para Tipagem do TS
+interface Estabelecimento {
+  id: string | number
+  nome: string
+  categoria: string
+  taxa_entrega: number
+  foto_estabelecimento: string
+  endereco: string
+}
+
 function CriarEstabelecimento() {
   const navigate = useNavigate()
-
   const { usuario } = useContext(AuthContext)
-  const [estabelecimentoss, setEstabelecimentos] = useState([])
+
+  // Estados
+  const [estabelecimentos, setEstabelecimentos] = useState<Estabelecimento[]>(
+    [],
+  )
   const [isLoading, setIsLoading] = useState(false)
-  // useState pra editar loja
-  // const [isEditandoLoja, setIsEditandoLoja] = useState(false)
   const [isCadastrandoLoja, setIsCadastrandoLoja] = useState(false)
-  const [loja, setLoja] = useState({
+
+  const [loja, setLoja] = useState<Omit<Estabelecimento, "id">>({
     nome: "",
     categoria: "Saudável",
     taxa_entrega: 0,
@@ -23,6 +41,7 @@ function CriarEstabelecimento() {
     endereco: "",
   })
 
+  // Proteção de Rota
   useEffect(() => {
     if (usuario.token === "") {
       ToastAlerta("Você precisa estar logado para acessar o perfil", "erro")
@@ -33,80 +52,64 @@ function CriarEstabelecimento() {
   function atualizarEstadoLoja(
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) {
+    const { name, value } = e.target
     setLoja({
       ...loja,
-      [e.target.name]:
-        e.target.name === "taxa_entrega"
-          ? Number(e.target.value)
-          : e.target.value,
+      [name]: name === "taxa_entrega" ? Number(value) : value,
     })
   }
 
-  async function cadastrarLoja(e: React.FormEvent<HTMLFormElement>) {
+  async function cadastrarLoja(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsLoading(true)
     try {
-      console.log("loja enviada:", loja)
       await cadastrar(`/estabelecimentos/cadastrar`, loja, () => {}, {
         headers: { Authorization: usuario.token },
       })
+
       ToastAlerta("Estabelecimento configurado com sucesso!", "sucesso")
-
+      navigate("/home")
       setIsCadastrandoLoja(false)
-      console.log("formulario fechado", isCadastrandoLoja)
+      setLoja({
+        nome: "",
+        categoria: "Saudável",
+        taxa_entrega: 0,
+        foto_estabelecimento: "",
+        endereco: "",
+      })
 
+      // Atualiza a lista automaticamente após cadastrar
+      buscarMeusEstabelecimentos()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.error("Erro ao cadastrar loja:", error)
-      if (error.response && error.response.data) {
-        const mensagemDoBackend = error.response.data.message
-        alert(
-          `Motivo da recusa do Back-end: ${JSON.stringify(mensagemDoBackend)}`,
-        )
-      }
-      ToastAlerta("Erro ao configurar estabelecimento.", "erro")
+      const mensagemBack = error.response?.data?.message || "Erro desconhecido"
+      ToastAlerta(`Erro: ${mensagemBack}`, "erro")
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Buscar estabelecimento-------------------------------------
-  async function BuscarEstabelecimentos() {
+  async function buscarMeusEstabelecimentos() {
     try {
-      const resposta = await buscar(
-        `/usuarios/${usuario.id}`,
-        setEstabelecimentos,
-        {
-          headers: { Authorization: usuario.token },
-        },
-      )
-
-      // Aqui 'resposta' é o objeto completo do usuário
-      console.log("Usuário completo:", resposta)
-      console.log(resposta.estabelecimento)
-      deletar(`/estabelecimentos/`, resposta.estabelecimento[1].id)
-      // Somente os estabelecimentos
-      // if (resposta.estabelecimento.length > 0)
-      //   console.log("Estabelecimentos:", resposta.estabelecimento)
-      // // Se quiser atualizar o estado apenas com os estabelecimentos:
-      // setEstabelecimentos(resposta.estabelecimento)
+      // O Service 'buscar' preenche o estado via setEstabelecimentos
+      await buscar(`/usuarios/${usuario.id}`, setEstabelecimentos, {
+        headers: { Authorization: usuario.token },
+      })
     } catch (error) {
       console.error("Erro ao buscar estabelecimentos", error)
     }
   }
-  async function deletarEstabelecimento() {
-    console.log()
 
+  async function deletarEstabelecimentoPorId(id: string | number) {
     try {
-      await deletar(
-        `/estabelecimentos/${usuario.estabelecimento[1].id}`,
-
-        {
-          headers: { Authorization: usuario.token },
-        },
-      )
+      await deletar(`/estabelecimentos/${id}`, {
+        headers: { Authorization: usuario.token },
+      })
+      ToastAlerta("Estabelecimento removido!", "sucesso")
+      setEstabelecimentos(estabelecimentos.filter((e) => e.id !== id))
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Erro ao buscar estabelecimentos", error)
+      ToastAlerta("Erro ao deletar estabelecimento.", "erro")
     }
   }
 
@@ -118,7 +121,7 @@ function CriarEstabelecimento() {
             Meus Estabelecimentos
           </h3>
           <p className="mt-2 text-orange-600">
-            Configure sua loja para começar a vender.
+            Gerencie suas lojas e taxas de entrega.
           </p>
         </div>
         {!isCadastrandoLoja && (
@@ -127,7 +130,7 @@ function CriarEstabelecimento() {
             className="flex items-center justify-center gap-2 rounded bg-green-600 px-4 py-2 font-bold text-white shadow-md transition hover:bg-green-700"
           >
             <Plus size={20} />
-            Criar Loja
+            Criar Nova Loja
           </button>
         )}
       </div>
@@ -135,7 +138,7 @@ function CriarEstabelecimento() {
       {isCadastrandoLoja && (
         <form
           onSubmit={cadastrarLoja}
-          className="mt-4 border-t border-orange-200 pt-4"
+          className="animate-fade-in mt-4 border-t border-orange-200 pt-4"
         >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="flex flex-col">
@@ -145,7 +148,7 @@ function CriarEstabelecimento() {
                 name="nome"
                 value={loja.nome}
                 onChange={atualizarEstadoLoja}
-                className="rounded border border-orange-300 p-2 focus:border-orange-600 focus:outline-none"
+                className="rounded border border-orange-300 p-2 outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="Ex: FitFood"
                 required
               />
@@ -157,7 +160,7 @@ function CriarEstabelecimento() {
                 name="categoria"
                 value={loja.categoria}
                 onChange={atualizarEstadoLoja}
-                className="rounded border border-orange-300 bg-white p-2 focus:border-orange-600 focus:outline-none"
+                className="rounded border border-orange-300 bg-white p-2 outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="Saudável">Saudável</option>
                 <option value="Vegano">Vegano</option>
@@ -177,22 +180,20 @@ function CriarEstabelecimento() {
                 onChange={atualizarEstadoLoja}
                 min="0"
                 step="0.10"
-                className="rounded border border-orange-300 p-2 focus:border-orange-600 focus:outline-none"
+                className="rounded border border-orange-300 p-2 outline-none focus:ring-2 focus:ring-orange-500"
                 required
               />
             </div>
 
             <div className="flex flex-col sm:col-span-2 lg:col-span-1">
-              <label className="font-bold text-orange-800">
-                Foto do Estabelecimento (URL)
-              </label>
+              <label className="font-bold text-orange-800">Foto (URL)</label>
               <input
                 type="text"
                 name="foto_estabelecimento"
                 value={loja.foto_estabelecimento}
                 onChange={atualizarEstadoLoja}
-                className="rounded border border-orange-300 p-2 focus:border-orange-600 focus:outline-none"
-                placeholder="https://link-da-imagem..."
+                className="rounded border border-orange-300 p-2"
+                placeholder="https://..."
                 required
               />
             </div>
@@ -206,38 +207,25 @@ function CriarEstabelecimento() {
                 name="endereco"
                 value={loja.endereco}
                 onChange={atualizarEstadoLoja}
-                className="rounded border border-orange-300 p-2 focus:border-orange-600 focus:outline-none"
-                placeholder="Rua Exemplo, 123, Bairro, Paulista - PE"
+                className="rounded border border-orange-300 p-2"
+                placeholder="Rua Exemplo, 123..."
                 required
               />
             </div>
           </div>
 
-          <div className="mt-4 flex justify-end gap-4">
-            <button
-              type="button"
-              onClick={() => BuscarEstabelecimentos()}
-              className="rounded bg-red-400 px-4 py-2 font-bold text-white hover:bg-red-500"
-            >
-              Buscar Estabelecimentos
-            </button>
-            <button
-              type="button"
-              onClick={() => deletarEstabelecimento()}
-              className="rounded bg-red-400 px-4 py-2 font-bold text-white hover:bg-red-500"
-            >
-              Deletar Estabelecimentos
-            </button>
+          <div className="mt-6 flex justify-end gap-4">
             <button
               type="button"
               onClick={() => setIsCadastrandoLoja(false)}
-              className="rounded bg-red-400 px-4 py-2 font-bold text-white hover:bg-red-500"
+              className="rounded bg-gray-400 px-4 py-2 font-bold text-white transition hover:bg-gray-500"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex items-center justify-center rounded bg-green-600 px-6 py-2 font-bold text-white hover:bg-green-700"
+              disabled={isLoading}
+              className="flex min-w-[120px] items-center justify-center rounded bg-green-600 px-6 py-2 font-bold text-white transition hover:bg-green-700"
             >
               {isLoading ? (
                 <ClipLoader color="#ffffff" size={20} />
@@ -248,9 +236,68 @@ function CriarEstabelecimento() {
           </div>
         </form>
       )}
+
+      {/* Seção de Listagem para usar a variável 'estabelecimentos' */}
+      <div className="mt-8 border-t border-orange-200 pt-6">
+        <div className="mb-4 flex items-center justify-between">
+          <h4 className="flex items-center gap-2 text-xl font-bold text-orange-800">
+            <Store size={24} /> Lojas Cadastradas
+          </h4>
+          <button
+            onClick={buscarMeusEstabelecimentos}
+            className="text-sm font-semibold text-orange-600 hover:underline"
+          >
+            Atualizar Lista
+          </button>
+        </div>
+
+        {estabelecimentos.length === 0 ? (
+          <p className="text-orange-400 italic">
+            Nenhum estabelecimento carregado.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {estabelecimentos.map((est) => (
+              <div
+                key={est.id}
+                className="flex items-center justify-between rounded-lg border border-orange-100 bg-white p-4 shadow-sm"
+              >
+                <div className="flex items-center gap-4">
+                  <img
+                    src={est.foto_estabelecimento}
+                    alt={est.nome}
+                    className="h-12 w-12 rounded-full border border-orange-200 object-cover"
+                  />
+                  <div>
+                    <p className="font-bold text-gray-800">{est.nome}</p>
+                    <p className="text-xs text-gray-500">{est.categoria}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-bold text-green-700">
+                    R$ {est.taxa_entrega.toFixed(2)}
+                  </span>
+                  <button
+                    onClick={() => deletarEstabelecimentoPorId(est.id)}
+                    className="text-red-500 transition hover:text-red-700"
+                    title="Excluir"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
-  return <div>{renderEstabelecimentoPanel()}</div>
+
+  return (
+    <div className="container mx-auto px-4 pb-12">
+      {renderEstabelecimentoPanel()}
+    </div>
+  )
 }
 
 export default CriarEstabelecimento

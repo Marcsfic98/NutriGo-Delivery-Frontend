@@ -378,7 +378,7 @@ export function Perfil() {
           <>
             {/* Se for ESTABELECIMENTO */}
             {usuario.tipo === "ESTABELECIMENTO" &&
-              (usuarioCompleto?.estabelecimento?.length === 0 ? (
+              (usuarioCompleto?.estabelecimento?.id === undefined ? (
                 <div className="mt-10">
                   <CriarEstabelecimento />
                 </div>

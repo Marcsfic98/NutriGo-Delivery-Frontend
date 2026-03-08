@@ -9,6 +9,7 @@ interface CardProdutoProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   produtos: any[]
   // Adicionamos setProdutos para atualizar a lista sem dar reload na página
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setProdutos?: React.Dispatch<React.SetStateAction<any[]>>
   titulo?: string
   isOwner?: boolean
@@ -51,6 +52,7 @@ export const CardProduto = ({
         if (setProdutos) {
           setProdutos(produtos.filter((p) => p.id !== id))
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error("Erro ao deletar:", error)
         if (error.response?.status === 401) {

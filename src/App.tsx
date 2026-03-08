@@ -17,8 +17,9 @@ import ListaPedidos from "./pages/pedido/ListaPedidos"
 import { Perfil } from "./pages/Perfil"
 import { Produtos } from "./pages/Produtos"
 import { Sobre } from "./pages/Sobre"
-import PageEstabelecimento from "./pages/PageEstabelecimento"
+
 import { FormProduto } from "./components/formproduto/FormProduto"
+import PageEstabelecimento from "./pages/PageEstabelecimento"
 
 export function App() {
   return (
