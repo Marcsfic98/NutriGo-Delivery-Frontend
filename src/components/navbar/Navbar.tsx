@@ -1,5 +1,11 @@
 import { useContext, useState } from "react" // Adicionado useState
-import { FaBars, FaSignOutAlt, FaTimes, FaUser } from "react-icons/fa" // Adicionado ícones de menu
+import {
+  FaBars,
+  FaCartPlus,
+  FaSignOutAlt,
+  FaTimes,
+  FaUser,
+} from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext"
 import { ToastAlerta } from "../../util/ToastAlerta"
@@ -55,9 +61,22 @@ export const Navbar = () => {
             Estabelecimentos
           </Link>
 
-          <Link className="text-green-800 hover:text-yellow-600" to="/pedidos">
-            Pedidos
+          <Link className="text-green-800 hover:text-yellow-600" to="/Sobre">
+            Sobre
           </Link>
+
+          {usuario.tipo !== "USUARIO" ? (
+            <Link
+              className="text-green-800 hover:text-yellow-600"
+              to="/pedidos"
+            >
+              Pedidos
+            </Link>
+          ) : (
+            <Link className="text-green-800 hover:text-yellow-600" to="/cart">
+              <FaCartPlus size={22} />
+            </Link>
+          )}
 
           <Link className="text-green-800 hover:text-yellow-600" to="/Sobre">
             Sobre
