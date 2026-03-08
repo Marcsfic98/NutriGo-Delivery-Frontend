@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react"
 import type { ChangeEvent, FormEvent } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { ClipLoader } from "react-spinners"
 import { AuthContext } from "../../contexts/AuthContext"
@@ -145,7 +145,6 @@ export function FormProduto() {
           {id !== undefined ? "Editar Produto" : "Cadastrar Produto"}
         </h1>
 
-        {/* Nome do Produto */}
         <div className="flex flex-col">
           <label className="font-bold text-gray-700">Nome do Produto</label>
           <input
@@ -158,7 +157,6 @@ export function FormProduto() {
           />
         </div>
 
-        {/* Descrição */}
         <div className="flex flex-col">
           <label className="font-bold text-gray-700">Descrição</label>
           <input
@@ -171,7 +169,6 @@ export function FormProduto() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {/* Preço */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Preço (R$)</label>
             <input
@@ -186,7 +183,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Foto */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Foto (URL)</label>
             <input
@@ -199,7 +195,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Calorias */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Calorias (kcal)</label>
             <input
@@ -211,7 +206,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Proteinas */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Proteínas (g)</label>
             <input
@@ -223,7 +217,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Carboridratos */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Carboidratos (g)</label>
             <input
@@ -236,7 +229,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Gordura */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Gorduras (g)</label>
             <input

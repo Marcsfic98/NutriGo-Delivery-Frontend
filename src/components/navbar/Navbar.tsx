@@ -1,5 +1,11 @@
 import { useContext, useState } from "react" // Adicionado useState
-import { FaBars, FaSignOutAlt, FaTimes, FaUser } from "react-icons/fa" // Adicionado ícones de menu
+import {
+  FaBars,
+  FaCartPlus,
+  FaSignOutAlt,
+  FaTimes,
+  FaUser,
+} from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext"
 import { ToastAlerta } from "../../util/ToastAlerta"
@@ -8,7 +14,6 @@ export const Navbar = () => {
   const { usuario, handleLogout } = useContext(AuthContext)
   const navigate = useNavigate()
 
-  // Estado para o menu mobile
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   function logout() {
@@ -21,7 +26,6 @@ export const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 z-50 w-full bg-white font-sans shadow-sm">
       <div className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-        {/* LOGO (Mantida Original) */}
         <div className="absolute top-0 left-0 flex h-30 w-64 items-center justify-center rounded-b-[200px] bg-white">
           <Link to="/home">
             <img
@@ -34,7 +38,6 @@ export const Navbar = () => {
 
         <div className="w-24"></div>
 
-        {/* BOTÃO HAMBÚRGUER (Apenas visível no Mobile) */}
         <button
           className="z-50 text-green-800 md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -42,7 +45,6 @@ export const Navbar = () => {
           {isMenuOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
         </button>
 
-        {/* LINKS DESKTOP (Sua estilização original preservada com md:flex) */}
         <div className="hidden items-center gap-6 md:flex">
           <Link className="text-green-800 hover:text-yellow-600" to="/home">
             Home
@@ -60,9 +62,19 @@ export const Navbar = () => {
           <Link className="text-green-800 hover:text-yellow-600" to="/Sobre">
             Sobre
           </Link>
-          <Link className="text-green-800 hover:text-yellow-600" to="/pedidos">
-            Pedidos
-          </Link>
+
+          {usuario.tipo !== "USUARIO" ? (
+            <Link
+              className="text-green-800 hover:text-yellow-600"
+              to="/pedidos"
+            >
+              Pedidos
+            </Link>
+          ) : (
+            <Link className="text-green-800 hover:text-yellow-600" to="/cart">
+              <FaCartPlus size={22} />
+            </Link>
+          )}
 
           {usuario.token ? (
             <div className="flex items-center gap-4 border-l border-green-200 pl-4">
@@ -98,7 +110,6 @@ export const Navbar = () => {
           )}
         </div>
 
-        {/* MENU MOBILE (Exibido apenas quando isMenuOpen é true e em telas pequenas) */}
         {isMenuOpen && (
           <div className="absolute top-full left-0 flex w-full flex-col gap-4 border-t border-gray-100 bg-white p-6 shadow-lg md:hidden">
             <Link
