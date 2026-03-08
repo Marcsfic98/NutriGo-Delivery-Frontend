@@ -36,7 +36,7 @@ export function FormProduto() {
 
   useEffect(() => {
     console.log(usuario)
-  }, [])
+  }, [usuario])
 
   useEffect(() => {
     if (usuario.token === "") {
@@ -100,7 +100,7 @@ export function FormProduto() {
       const est = estabelecimentos.find((e) => e.id === Number(value))
       setProduto({
         ...produto,
-        estabelecimento: est || undefined, // passa o objeto completo
+        estabelecimento: est || undefined,
       })
     } else {
       setProduto({
@@ -241,7 +241,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Categoria */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Categoria</label>
             <select
@@ -262,7 +261,6 @@ export function FormProduto() {
             </select>
           </div>
 
-          {/* estabelecimento */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Estabelecimento</label>
             <select
@@ -279,7 +277,7 @@ export function FormProduto() {
                 .filter(
                   (estabelecimento) =>
                     estabelecimento.usuario?.id === usuario.id,
-                ) // só mostra os do usuário
+                )
                 .map((estabelecimento) => (
                   <option key={estabelecimento.id} value={estabelecimento.id}>
                     {estabelecimento.nome}

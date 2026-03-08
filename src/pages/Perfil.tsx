@@ -37,6 +37,7 @@ export function Perfil() {
     } else {
       buscarDadosUsuario()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usuario.token])
 
   async function buscarDadosUsuario() {
@@ -163,7 +164,6 @@ export function Perfil() {
                 </div>
               </div>
 
-              {/* Itens do Pedido */}
               <div className="px-6 py-4">
                 <p className="mb-4 flex items-center gap-2 text-xs font-bold tracking-tighter text-gray-400 uppercase">
                   <Tag size={12} /> Produtos no Pedido
@@ -217,7 +217,6 @@ export function Perfil() {
                 </div>
               </div>
 
-              {/* Rodapé com Total */}
               <div className="flex items-center justify-between border-t border-gray-100 bg-lime-50/30 px-6 py-4">
                 <span className="text-sm font-bold text-lime-800">
                   Total Pago

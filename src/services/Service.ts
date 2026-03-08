@@ -7,7 +7,6 @@ import axios from "axios"
 // });
 
 const api = axios.create({
-  
   // baseURL: "http://localhost:4000",
   baseURL: "https://aplicativo-de-delivery-backend-1.onrender.com",
 })

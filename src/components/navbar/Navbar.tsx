@@ -49,9 +49,11 @@ export const Navbar = () => {
           <Link className="text-green-800 hover:text-yellow-600" to="/home">
             Home
           </Link>
+
           <Link className="text-green-800 hover:text-yellow-600" to="/produtos">
             Produtos
           </Link>
+
           <Link
             className="text-green-800 hover:text-yellow-600"
             to="/estabelecimentos"
@@ -75,6 +77,10 @@ export const Navbar = () => {
               <FaCartPlus size={22} />
             </Link>
           )}
+
+          <Link className="text-green-800 hover:text-yellow-600" to="/Sobre">
+            Sobre
+          </Link>
 
           {usuario.token ? (
             <div className="flex items-center gap-4 border-l border-green-200 pl-4">

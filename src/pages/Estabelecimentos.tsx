@@ -34,7 +34,7 @@ export function Estabelecimentos() {
   return (
     <>
       <div className="mx-90 mt-30 mb-15">
-        <h1 className="text-center text-2xl text-shadow-2xs mb-8 text-[#1d5f29] font-semibold">
+        <h1 className="mb-8 text-center text-2xl font-semibold text-[#1d5f29] text-shadow-2xs">
           Venha comer com a gente
         </h1>
         {isLoading && (
