@@ -10,7 +10,7 @@ export function Footer() {
   const data = new Date().getFullYear()
 
   return (
-    <footer className="z-50 mt-4 bg-white text">
+    <footer className="text z-50 mt-4 bg-white">
       {/* <div className="mx-auto max-w-7xl space-y-8 px-4 py-16 sm:px-6 lg:space-y-13 lg:px-5 flex "> */}
 
       <div className="mx-90 mb-10 flex justify-between">
@@ -152,7 +152,7 @@ export function Footer() {
                 href="#"
                 className="text-green-600 transition hover:opacity-75"
               >
-                Política de Reembolso 
+                Política de Reembolso
               </a>
             </li>
             <li>
@@ -166,12 +166,10 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      {/* footer logo  */}
-      <div className="flex gap-3 justify-center mb-2">
+      <div className="mb-2 flex justify-center gap-3">
         <div className="mt-2 flex text-teal-600">
           <img src="/public/img/logo/logo.png" alt="" className="w-30" />
         </div>
-        {/* Redes sociais */}
         <div className="flex sm:flex sm:items-center sm:justify-between">
           <ul className="flex justify-start gap-6 sm:mt-0 sm:justify-end">
             <li>
@@ -221,7 +219,7 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <p className="text-center text- text-green-600">
+      <p className="text- text-center text-green-600">
         © {data}. NutriGo Delivery. Todos os direitos reservados.
       </p>
     </footer>

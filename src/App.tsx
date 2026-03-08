@@ -16,7 +16,6 @@ import FormPedido from "./pages/pedido/FormPedido"
 import ListaPedidos from "./pages/pedido/ListaPedidos"
 import { Sobre } from "./pages/Sobre"
 
-
 export function App() {
   return (
     <AuthProvider>
@@ -24,25 +23,24 @@ export function App() {
         <ScrollToTop />
         <Navbar />
         <div className="min-h-[70vh]">
-
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cadastro" element={<Cadastro />} />
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/produtos" element={<Produtos />} />
-          <Route path="/cadastrarproduto" element={<FormProduto />} />
-          <Route path="/editarproduto/:id" element={<FormProduto />} />
-          <Route path="/deletarproduto/:id" element={<FormProduto />} />
-          <Route path="/estabelecimentos" element={<Estabelecimentos />} />
-          <Route path="/sobre" element={<Sobre />} />
-          <Route path="/contato" element={<Contato />} />
-          <Route path="/pedidos" element={<ListaPedidos />} />
-          <Route path="/cadastrarPedido" element={<FormPedido />} />
-          <Route path="/editarPedido/:id" element={<FormPedido />} />
-          <Route path="/deletarPedido/:id" element={<DeletarPedido />} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/cadastro" element={<Cadastro />} />
+            <Route path="/perfil" element={<Perfil />} />
+            <Route path="/produtos" element={<Produtos />} />
+            <Route path="/cadastrarproduto" element={<FormProduto />} />
+            <Route path="/editarproduto/:id" element={<FormProduto />} />
+            <Route path="/deletarproduto/:id" element={<FormProduto />} />
+            <Route path="/estabelecimentos" element={<Estabelecimentos />} />
+            <Route path="/sobre" element={<Sobre />} />
+            <Route path="/contato" element={<Contato />} />
+            <Route path="/pedidos" element={<ListaPedidos />} />
+            <Route path="/cadastrarPedido" element={<FormPedido />} />
+            <Route path="/editarPedido/:id" element={<FormPedido />} />
+            <Route path="/deletarPedido/:id" element={<DeletarPedido />} />
+          </Routes>
         </div>
         <Footer />
       </BrowserRouter>

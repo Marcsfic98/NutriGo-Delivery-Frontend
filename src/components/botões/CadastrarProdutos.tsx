@@ -8,7 +8,6 @@ function CadastrarProdutos() {
   const { usuario } = useContext(AuthContext)
   return (
     <div>
-      {/* Botão Cadastrar Produto */}
       {usuario.tipo === "ESTABELECIMENTO" && (
         <button
           onClick={() => navigate("/cadastrarproduto")}

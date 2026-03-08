@@ -8,7 +8,6 @@ export interface CardEstabelecimentoProps {
 function CardEstabelecimento({ estabelecimento }: CardEstabelecimentoProps) {
   return (
     <div className="group flex h-full flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-xl">
-      {/* Imagem */}
       <div className="relative overflow-hidden rounded-t-2xl shadow">
         <img
           src={estabelecimento.foto_estabelecimento}
@@ -21,19 +20,13 @@ function CardEstabelecimento({ estabelecimento }: CardEstabelecimentoProps) {
         </span>
       </div>
 
-      {/* Conteúdo */}
-      <div
-        // onClick={() => onClick(produto)}
-        className="flex flex-1 cursor-pointer flex-col p-4"
-      >
+      <div className="flex flex-1 cursor-pointer flex-col p-4">
         <div>
-          <h4 className="mb-2 min-h-[40px] leading-tight font-bold text-gray-800">
+          <h4 className="mb-2 min-h-10 leading-tight font-bold text-gray-800">
             {estabelecimento.nome}
           </h4>
-          
         </div>
 
-        {/* Rodapé */}
         <div className="mt-auto flex items-center justify-between border-t border-gray-50 pt-4">
           <div className="flex flex-col">
             <span className="text-[12px] font-bold text-gray-400">

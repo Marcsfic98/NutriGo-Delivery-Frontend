@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react"
 import { Autoplay, Navigation } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -48,10 +49,7 @@ const foodData = [
 export function Home() {
   const [activeIndex, setActiveIndex] = useState(0)
 
-  // LÓGICA DE EFEITOS MANTIDA INTEGRALMENTE
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleProgress = (swiper: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     swiper.slides.forEach((slide: any) => {
       const slideProgress = slide.progress
       const absProgress = Math.abs(slideProgress)
@@ -105,9 +103,7 @@ export function Home() {
 
   return (
     <>
-      {/* Banner Principal - Ajustado padding e min-height */}
       <div className="relative mt-16 flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[url('img/banner/bghome.jpg')] bg-cover bg-center bg-no-repeat px-4 py-20 text-white">
-        {/* Títulos - Tamanhos reduzidos no mobile para não quebrar */}
         <div className="z-10 mb-10 text-center md:mb-20">
           <h2 className="text-2xl font-bold text-white transition-all duration-500 select-none md:text-4xl">
             {foodData[activeIndex]?.tamil}
@@ -120,7 +116,6 @@ export function Home() {
           </p>
         </div>
 
-        {/* Swiper - SlidesPerView dinâmico via breakpoints */}
         <div className="relative w-full max-w-5xl">
           <Swiper
             modules={[Navigation, Autoplay]}
@@ -142,8 +137,8 @@ export function Home() {
             }}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             breakpoints={{
-              320: { slidesPerView: 1.2 }, // Quase 1 slide inteiro no mobile
-              768: { slidesPerView: 3 }, // Seus 3 slides originais no desktop
+              320: { slidesPerView: 1.2 },
+              768: { slidesPerView: 3 },
             }}
             className="overflow-visible!"
           >
@@ -165,7 +160,6 @@ export function Home() {
           </Swiper>
         </div>
 
-        {/* Barra de progresso - Largura reduzida no mobile */}
         <div className="absolute bottom-10 left-1/2 h-0.5 w-32 -translate-x-1/2 bg-white/10 md:w-48">
           <div
             className="h-full bg-green-600 shadow-[0_0_10px_#ea580c] transition-all duration-700"
@@ -174,7 +168,6 @@ export function Home() {
         </div>
       </div>
 
-      {/* Seção Objetivos - Mantendo seu grid responsivo original com ajustes de padding */}
       <section className="bg-gray-50 px-4 py-12 md:py-16">
         <div className="mx-auto max-w-6xl">
           <h2 className="mb-8 text-center text-2xl font-black tracking-tight text-green-600 uppercase md:mb-12 md:text-4xl">
@@ -186,7 +179,7 @@ export function Home() {
                 key={index}
                 className="flex items-center gap-5 rounded-2xl bg-white p-6 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] transition-shadow duration-300 hover:shadow-lg md:p-8"
               >
-                <div className={`${item.bgIcon} flex-shrink-0 rounded-2xl p-4`}>
+                <div className={`${item.bgIcon} shrink-0 rounded-2xl p-4`}>
                   {item.icon}
                 </div>
                 <div className="flex flex-col">
@@ -203,7 +196,6 @@ export function Home() {
         </div>
       </section>
 
-      {/* Seção Reviews - Ajustada fonte do título no mobile */}
       <section className="w-full bg-gray-100 py-12 md:py-20">
         <div className="mx-auto max-w-6xl px-6 text-center">
           <h2 className="text-3xl font-extrabold text-green-500 uppercase md:text-4xl">

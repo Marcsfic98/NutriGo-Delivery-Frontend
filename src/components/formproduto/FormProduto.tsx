@@ -36,7 +36,7 @@ export function FormProduto() {
 
   useEffect(() => {
     console.log(usuario)
-  }, [])
+  }, [usuario])
 
   useEffect(() => {
     if (usuario.token === "") {
@@ -100,7 +100,7 @@ export function FormProduto() {
       const est = estabelecimentos.find((e) => e.id === Number(value))
       setProduto({
         ...produto,
-        estabelecimento: est || undefined, // passa o objeto completo
+        estabelecimento: est || undefined,
       })
     } else {
       setProduto({
@@ -145,7 +145,6 @@ export function FormProduto() {
           {id !== undefined ? "Editar Produto" : "Cadastrar Produto"}
         </h1>
 
-        {/* Nome do Produto */}
         <div className="flex flex-col">
           <label className="font-bold text-gray-700">Nome do Produto</label>
           <input
@@ -158,7 +157,6 @@ export function FormProduto() {
           />
         </div>
 
-        {/* Descrição */}
         <div className="flex flex-col">
           <label className="font-bold text-gray-700">Descrição</label>
           <input
@@ -171,7 +169,6 @@ export function FormProduto() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {/* Preço */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Preço (R$)</label>
             <input
@@ -186,7 +183,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Foto */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Foto (URL)</label>
             <input
@@ -199,7 +195,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Calorias */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Calorias (kcal)</label>
             <input
@@ -211,7 +206,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Proteinas */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Proteínas (g)</label>
             <input
@@ -223,7 +217,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Carboridratos */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Carboidratos (g)</label>
             <input
@@ -236,7 +229,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Gordura */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Gorduras (g)</label>
             <input
@@ -249,7 +241,6 @@ export function FormProduto() {
             />
           </div>
 
-          {/* Categoria */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Categoria</label>
             <select
@@ -270,7 +261,6 @@ export function FormProduto() {
             </select>
           </div>
 
-          {/* estabelecimento */}
           <div className="flex flex-col">
             <label className="font-bold text-gray-700">Estabelecimento</label>
             <select
@@ -287,7 +277,7 @@ export function FormProduto() {
                 .filter(
                   (estabelecimento) =>
                     estabelecimento.usuario?.id === usuario.id,
-                ) // só mostra os do usuário
+                )
                 .map((estabelecimento) => (
                   <option key={estabelecimento.id} value={estabelecimento.id}>
                     {estabelecimento.nome}

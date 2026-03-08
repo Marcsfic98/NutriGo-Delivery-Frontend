@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createContext, useState, type ReactNode } from "react"
-import type Estabelecimento from "../models/Estabelecimento"
 import type Usuario from "../models/Usuario"
 import type UsuarioLogin from "../models/UsuarioLogin"
 import { login } from "../services/Service"
@@ -42,10 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function handleLogin(usuarioLogin: UsuarioLogin) {
     setIsLoading(true)
     try {
-      // Criamos uma variável temporária para tratar o dado antes de salvar no state
       await login(`/auth/logar`, usuarioLogin, (resposta: any) => {
-        // Se o backend vier como Array, pegamos a primeira posição [0]
-        // Se vier como Objeto, pegamos direto a resposta
         const dadosTratados = Array.isArray(resposta) ? resposta[0] : resposta
         setUsuario(dadosTratados)
       })
