@@ -96,152 +96,14 @@ export function Perfil() {
         <h3 className="text-2xl font-bold text-gray-800">Meus Pedidos</h3>
       </div>
 
-      {!usuarioCompleto ? (
-        <div className="flex flex-col items-center justify-center py-20">
-          <ClipLoader color="#65a30d" size={40} />
-          <p className="mt-4 animate-pulse text-gray-500">
-            Carregando seus pedidos...
-          </p>
-        </div>
-      ) : usuarioCompleto.pedido && usuarioCompleto.pedido.length > 0 ? (
-        <div className="flex flex-col gap-8">
-          {usuarioCompleto.pedido.map((pedido) => (
-            <div
-              key={pedido.id}
-              className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-colors hover:border-lime-300"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 bg-gray-50 px-6 py-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white shadow-inner">
-                    {(() => {
-                      const est = pedido.estabelecimento as Estabelecimento
-                      return est?.foto_estabelecimento ? (
-                        <img
-                          src={est.foto_estabelecimento}
-                          alt={est.nome}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <Store className="text-gray-300" size={24} />
-                      )
-                    })()}
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-lime-600">
-                      {(pedido.estabelecimento as Estabelecimento).nome}
-                    </p>
-                    <p className="text-xs font-medium text-gray-500">
-                      Pedido #{pedido.id}
-                    </p>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-6">
-                  <div className="text-right">
-                    <p className="text-xs font-bold text-gray-400 uppercase">
-                      Data
-                    </p>
-                    <p className="text-sm font-medium text-gray-600">
-                      {new Date(pedido.data_pedido).toLocaleDateString("pt-BR")}
-                    </p>
-                  </div>
-                  <div
-                    className={`flex items-center gap-2 rounded-full px-3 py-1 ${
-                      pedido.status === "Entregue"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-amber-100 text-amber-700"
-                    }`}
-                  >
-                    {pedido.status === "Entregue" ? (
-                      <CheckCircle size={14} />
-                    ) : (
-                      <Clock size={14} />
-                    )}
-                    <span className="text-xs font-bold uppercase">
-                      {pedido.status}
-                    </span>
-                  </div>
-                </div>
-              </div>
 
-              <div className="px-6 py-4">
-                <p className="mb-4 flex items-center gap-2 text-xs font-bold tracking-tighter text-gray-400 uppercase">
-                  <Tag size={12} /> Produtos no Pedido
-                </p>
-                <div className="space-y-3">
-                  {pedido.itensPedido && pedido.itensPedido.length > 0 ? (
-                    pedido.itensPedido.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50/50 p-3"
-                      >
-                        <div className="flex items-center gap-3">
-                          {item.produto?.foto_produto && (
-                            <img
-                              src={item.produto.foto_produto}
-                              alt={item.produto.nome}
-                              className="h-12 w-12 rounded-lg border border-gray-200 object-cover"
-                            />
-                          )}
-                          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-lime-100 text-sm font-bold text-lime-700">
-                            {item.quantidade}x
-                          </span>
-                          <div>
-                            <p className="text-sm font-bold text-gray-800">
-                              {item.produto?.nome || "Produto"}
-                            </p>
-                            <p className="text-[10px] text-gray-400 italic">
-                              R${" "}
-                              {Number(item.preco_unitario)
-                                .toFixed(2)
-                                .replace(".", ",")}{" "}
-                              un.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-bold text-gray-700">
-                            R${" "}
-                            {(Number(item.preco_unitario) * item.quantidade)
-                              .toFixed(2)
-                              .replace(".", ",")}
-                          </p>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-xs text-gray-400 italic">
-                      Detalhes não disponíveis.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between border-t border-gray-100 bg-lime-50/30 px-6 py-4">
-                <span className="text-sm font-bold text-lime-800">
-                  Total Pago
-                </span>
-                <span className="text-2xl font-black text-lime-700">
-                  R$ {Number(pedido.valor_total).toFixed(2).replace(".", ",")}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="rounded-3xl border-2 border-dashed border-gray-200 bg-gray-50 py-20 text-center">
-          <Package size={60} className="mx-auto mb-4 text-gray-300" />
-          <p className="text-lg font-bold text-gray-500">
-            Nenhum pedido realizado ainda.
-          </p>
-          <button
-            onClick={() => navigate("/")}
-            className="mt-4 font-bold text-lime-600 hover:underline"
-          >
-            Ir para a loja →
-          </button>
-        </div>
-      )}
+  const renderUsuarioPanel = () => (
+    <div className="mt-8 rounded-lg border border-lime-200 bg-lime-50 p-6 shadow-md">
+      <h3 className="text-2xl font-bold text-lime-800">Minha Área</h3>
+      <p className="mt-2 text-lime-600">
+        Acompanhe seus pedidos de comida saudável.
+      </p>
     </div>
   )
 
@@ -351,8 +213,14 @@ export function Perfil() {
             </div>
           </form>
         ) : (
-          renderUsuarioPanel()
+          <>
+            {usuario.tipo === "ADM" && renderAdminPanel()}
+            {usuario.tipo === "ESTABELECIMENTO" && <CriarEstabelecimento/>}
+            {(!usuario.tipo || usuario.tipo === "USUARIO") &&
+              renderUsuarioPanel()}
+          </>
         )}
+        {/* <CadastrarProdutos /> */}
       </div>
     </div>
   )

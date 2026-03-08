@@ -8,6 +8,7 @@ import type Produto from "../models/Produto"
 import { buscar, deletar } from "../services/Service"
 import { ToastAlerta } from "../util/ToastAlerta"
 import ProdutoDetalhe from "./ProdutoDetalhe"
+import CriarEstabelecimento from "../components/botões/CriarEstabelecimento"
 
 export function Produtos() {
   const { usuario } = useContext(AuthContext)
@@ -155,6 +156,7 @@ export function Produtos() {
             </button>
           )}
         </div>
+        <CriarEstabelecimento/>
         <div className="mb-6 hidden h-px w-full bg-gray-200 sm:block"></div>
 
         {loading ? (
