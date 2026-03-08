@@ -177,11 +177,7 @@ export function Footer() {
         {/* Linha Inferior: Logo e Redes Sociais */}
         <div className="flex flex-col items-center justify-between gap-6 border-t border-zinc-100 pt-8 sm:flex-row">
           <div className="flex flex-col items-center gap-2 sm:items-start">
-            <img
-              src="/public/img/logo/logo.png"
-              alt="NutriGo Logo"
-              className="w-28"
-            />
+            <img src="/img/logo/logo.png" alt="NutriGo Logo" className="w-28" />
             <p className="text-xs font-medium text-green-600 italic">
               Sua saúde na sua porta.
             </p>
@@ -218,7 +214,10 @@ export function Footer() {
         <div className="mt-8 text-center">
           <p className="text-[10px] font-bold tracking-widest text-zinc-400 uppercase">
             © {data} NutriGo Delivery. Desenvolvido por{" "}
-            <span className="text-emerald-600 italic">Squad Avanti</span>.
+            <span className="text-emerald-600 italic">
+              Grupo 2 - Generation
+            </span>
+            .
           </p>
         </div>
       </div>

@@ -86,15 +86,25 @@ export function Produtos() {
   }
 
   return (
-    <div className="mt-20 min-h-screen bg-gray-50 pb-20">
-      <div className="h-100 w-full bg-[url('/img/banner/banner_suco.png')] bg-cover bg-no-repeat"></div>
+    <div className="min-h-screen bg-gray-50 pb-20">
+      {/* BANNER: 
+          - hidden: Escondido no mobile.
+          - md:block: Aparece apenas em telas médias (Tablets/Desktop).
+      */}
+      <div className="hidden h-80 w-full bg-[url('/img/banner/banner_suco.png')] bg-cover bg-center bg-no-repeat md:block lg:h-100"></div>
 
-      <div className="mt-0 w-full px-4">
-        <div className="flex flex-col gap-6 rounded-3xl bg-white p-6 shadow-xl shadow-gray-200/50">
-          <nav className="no-scrollbar flex justify-center gap-3 overflow-x-auto py-2">
+      {/* CONTAINER DE BUSCA E FILTROS:
+          - mt-24: Dá espaço para a Navbar no mobile (já que não tem banner).
+          - md:mt-0: Remove a margem no desktop.
+          - md:-translate-y-1/2: Faz o card "subir" sobre o banner no desktop.
+      */}
+      <div className="mt-24 w-full px-4 md:mt-0 md:px-6">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 rounded-3xl bg-white p-5 shadow-xl shadow-gray-200/50 md:-translate-y-12 md:p-8">
+          {/* Filtros de Categoria com Scroll Lateral no Mobile */}
+          <nav className="no-scrollbar flex gap-3 overflow-x-auto pb-2 md:justify-center md:pb-0">
             <button
               onClick={() => setSelectedCategory("Todos")}
-              className={`cursor-pointer rounded-full border px-6 py-2 text-sm font-medium whitespace-nowrap transition-all ${
+              className={`cursor-pointer rounded-full border px-6 py-2.5 text-sm font-bold whitespace-nowrap transition-all ${
                 selectedCategory === "Todos"
                   ? "border-green-600 bg-green-600 text-white shadow-md shadow-green-200"
                   : "border-gray-200 bg-white text-gray-500 hover:border-green-300"
@@ -106,7 +116,7 @@ export function Produtos() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.nome)}
-                className={`cursor-pointer rounded-full border px-6 py-2 text-sm font-medium whitespace-nowrap transition-all ${
+                className={`cursor-pointer rounded-full border px-6 py-2.5 text-sm font-bold whitespace-nowrap transition-all ${
                   selectedCategory === cat.nome
                     ? "border-green-600 bg-green-600 text-white shadow-md shadow-green-200"
                     : "border-gray-200 bg-white text-gray-500 hover:border-green-300"
@@ -117,6 +127,7 @@ export function Produtos() {
             ))}
           </nav>
 
+          {/* Barra de Busca */}
           <div className="relative mx-auto w-full max-w-2xl">
             <Search
               className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400"
@@ -127,36 +138,37 @@ export function Produtos() {
               placeholder="Buscar pelo nome do prato..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full rounded-2xl border border-gray-100 bg-gray-50 py-4 pr-4 pl-12 text-gray-700 transition-all outline-none focus:border-green-500 focus:bg-white focus:ring-4 focus:ring-green-500/10"
+              className="w-full rounded-2xl border border-gray-100 bg-gray-50 py-4 pr-4 pl-12 text-sm text-gray-700 transition-all outline-none focus:border-green-500 focus:bg-white focus:ring-4 focus:ring-green-500/10 md:text-base"
             />
           </div>
         </div>
       </div>
 
-      <main className="mx-auto mt-12 max-w-6xl px-4">
+      <main className="mx-auto mt-8 max-w-6xl px-4 md:mt-0">
         <div className="mb-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex w-full items-center gap-2 sm:w-auto">
-            <h2 className="text-2xl font-bold whitespace-nowrap text-gray-800">
+            <h2 className="text-xl font-black whitespace-nowrap text-gray-800 uppercase md:text-2xl">
               {searchTerm
                 ? `Resultados para "${searchTerm}"`
                 : selectedCategory === "Todos"
                   ? "Nossos Pratos"
                   : selectedCategory}
             </h2>
-            <div className="ml-2 h-px flex-1 bg-gray-200 sm:hidden"></div>
+            <div className="ml-2 h-px flex-1 bg-gray-200"></div>
           </div>
         </div>
 
-        <div className="mb-6 hidden h-px w-full bg-gray-200 sm:block"></div>
-
         {loading ? (
-          <div className="grid animate-pulse grid-cols-2 gap-6 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-64 rounded-2xl bg-gray-200"></div>
+              <div
+                key={i}
+                className="h-80 animate-pulse rounded-2xl bg-gray-200"
+              ></div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filteredProducts.map((p) => {
               const isDono = p.estabelecimento?.id === meuEstabelecimentoId
 
@@ -169,7 +181,7 @@ export function Produtos() {
                     <img
                       src={p.foto_produto}
                       alt={p.nome}
-                      className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <span className="absolute top-3 left-3 rounded-lg bg-white/90 px-2 py-1 text-[10px] font-bold tracking-wider text-gray-700 uppercase backdrop-blur">
                       {p.categoria?.nome || "Sem Categoria"}
@@ -182,8 +194,7 @@ export function Produtos() {
                             e.stopPropagation()
                             navigate(`/editarproduto/${p.id}`)
                           }}
-                          className="rounded-full bg-yellow-400 p-2 text-yellow-900 shadow transition hover:scale-110 hover:bg-yellow-500"
-                          title="Editar Produto"
+                          className="rounded-full bg-yellow-400 p-2 text-yellow-900 shadow transition hover:scale-110"
                         >
                           <Pencil size={16} />
                         </button>
@@ -192,8 +203,7 @@ export function Produtos() {
                             e.stopPropagation()
                             handleDelete(p.id)
                           }}
-                          className="rounded-full bg-red-500 p-2 text-white shadow transition hover:scale-110 hover:bg-red-600"
-                          title="Deletar Produto"
+                          className="rounded-full bg-red-500 p-2 text-white shadow transition hover:scale-110"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -221,7 +231,7 @@ export function Produtos() {
                       )}
                       {p.proteinas && (
                         <span className="flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-600">
-                          {p.proteinas} prot.
+                          {p.proteinas}g prot.
                         </span>
                       )}
                     </div>
@@ -235,7 +245,7 @@ export function Produtos() {
                           R$ {Number(p.preco).toFixed(2)}
                         </span>
                       </div>
-                      <button className="cursor-pointer rounded-xl bg-green-600 p-2.5 text-white shadow-lg shadow-green-100 transition hover:bg-green-700 active:scale-90">
+                      <button className="cursor-pointer rounded-xl bg-green-600 p-2.5 text-white shadow-lg shadow-green-100 transition hover:bg-green-700 active:scale-95">
                         <ShoppingCart size={18} />
                       </button>
                     </div>

@@ -137,21 +137,31 @@ export function Home() {
             }}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             breakpoints={{
-              320: { slidesPerView: 1.2 },
-              768: { slidesPerView: 3 },
+              // No mobile, exibimos 1 slide centralizado
+              320: {
+                slidesPerView: 1,
+                spaceBetween: 0,
+              },
+              // No desktop, exibimos 3
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
             }}
-            className="overflow-visible!"
+            // Garante que o swiper ocupe toda a largura para poder centralizar
+            className="w-full overflow-visible!"
           >
             {foodData.map((food) => (
               <SwiperSlide
                 key={food.id}
-                className="flex flex-col items-center justify-center"
+                className="flex items-center justify-center" // Centralização flex
               >
-                <div className="group relative">
+                <div className="group relative flex w-full items-center justify-center">
                   <img
                     src={food.img}
                     alt={food.name}
-                    className="h-auto w-56 drop-shadow-[0_30px_60px_rgba(0,0,0,0.9)] transition-transform duration-500 group-hover:scale-110 md:w-87.5"
+                    // mx-auto garante a centralização horizontal da tag img
+                    className="mx-auto h-auto w-64 drop-shadow-[0_30px_60px_rgba(0,0,0,0.9)] transition-transform duration-500 group-hover:scale-110 md:w-87.5"
                   />
                   <div className="absolute -bottom-10 left-1/2 -z-10 h-14 w-44 -translate-x-1/2 rounded-full bg-green-600/30 opacity-0 blur-[50px] transition-opacity duration-500 in-[.swiper-slide-active]:opacity-100" />
                 </div>
