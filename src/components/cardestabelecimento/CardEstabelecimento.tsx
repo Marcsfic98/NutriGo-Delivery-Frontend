@@ -1,13 +1,18 @@
 import { ShoppingCart } from "lucide-react"
 import type Estabelecimento from "../../models/Estabelecimento"
+import { useNavigate } from "react-router-dom"
 
 export interface CardEstabelecimentoProps {
   estabelecimento: Estabelecimento
 }
 
 function CardEstabelecimento({ estabelecimento }: CardEstabelecimentoProps) {
+  const navigate = useNavigate()
   return (
-    <div className="group flex h-full flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-xl">
+    <div
+      onClick={() => navigate(`/estabelecimento/${estabelecimento.id}`)}
+      className="group flex h-full cursor-pointer flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-xl"
+    >
       <div className="relative overflow-hidden rounded-t-2xl shadow">
         <img
           src={estabelecimento.foto_estabelecimento}
@@ -41,7 +46,7 @@ function CardEstabelecimento({ estabelecimento }: CardEstabelecimentoProps) {
             </span>
           </div>
 
-          <button className="rounded-xl bg-green-700 p-2.5 text-white shadow-lg shadow-green-100 transition hover:bg-green-700 active:scale-90">
+          <button className="rounded-xl bg-green-700 p-2.5 text-white shadow-lg shadow-green-100 transition hover:bg-green-900 active:scale-90">
             <ShoppingCart size={18} />
           </button>
         </div>

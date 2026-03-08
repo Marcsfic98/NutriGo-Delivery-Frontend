@@ -36,15 +36,15 @@ function ListaPedidos() {
     }
   }, [usuario.token, usuario.id])
 
-  useEffect(() => {
-    if (usuarioData.estabelecimento && usuarioData.estabelecimento.length > 0) {
-      buscar(
-        `/estabelecimentos/${usuarioData.estabelecimento[0].id}`,
-        setEstabelecimento,
-        authHeader(usuario.token),
-      )
-    }
-  }, [usuarioData])
+ useEffect(() => {
+  if (usuarioData.estabelecimento?.id) {
+    buscar(
+      `/estabelecimentos/${usuarioData.estabelecimento.id}`,
+      setEstabelecimento,
+      authHeader(usuario.token)
+    )
+  }
+}, [usuarioData, usuario.token])
 
   useEffect(() => {
     if (estabelecimento.pedido) {
@@ -110,12 +110,7 @@ function ListaPedidos() {
                 </p>
               </div>
             </div>
-            <Link
-              to="/cadastrarPedido"
-              className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-emerald-700"
-            >
-              + Novo Pedido
-            </Link>
+            
           </div>
         </section>
 

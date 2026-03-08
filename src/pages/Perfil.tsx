@@ -88,10 +88,9 @@ export function Perfil() {
 
   // --- PAINEL DO ESTABELECIMENTO (DONO) ---
   const renderEstabelecimentoPanel = () => {
-    const meuEstabelecimento = usuarioCompleto?.estabelecimento?.[0]
-    const produtosDoDono =
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      usuarioCompleto?.estabelecimento?.flatMap((est: any) => est.produto) || []
+    const meuEstabelecimento = usuarioCompleto?.estabelecimento
+
+    const produtosDoDono = usuarioCompleto?.estabelecimento?.produto || []
 
     return (
       <div className="animate-fadeIn mt-8 space-y-8">

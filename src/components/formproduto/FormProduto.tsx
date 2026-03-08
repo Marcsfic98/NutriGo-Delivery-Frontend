@@ -16,7 +16,6 @@ export function FormProduto() {
   const { usuario, handleLogout } = useContext(AuthContext)
 
   const [categorias, setCategorias] = useState<Categoria[]>([])
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [estabelecimentos, setEstabelecimentos] = useState<Estabelecimento[]>(
     [],
   )
@@ -42,35 +41,61 @@ export function FormProduto() {
       navigate("/")
     } else if (usuario.tipo !== "ESTABELECIMENTO") {
       ToastAlerta("Acesso negado", "erro")
-      navigate("/home")
+      navigate("/produtos")
     }
   }, [usuario.token, navigate, usuario.tipo])
 
   useEffect(() => {
-    async function carregarDados() {
+    async function buscarCategorias() {
       try {
-        await Promise.all([
-          buscar("/categoria", setCategorias),
-          buscar("/estabelecimentos", setEstabelecimentos, {
-            headers: { Authorization: usuario.token },
-          }),
-        ])
-        if (id !== undefined) await buscar(`/produtos/${id}`, setProduto)
+        await buscar("/categoria", setCategorias)
       } catch (error) {
         if (String(error).includes("401")) handleLogout()
       }
     }
-    carregarDados()
-  }, [id, handleLogout, usuario.token])
+
+    async function buscarEstabelecimentos() {
+      try {
+        await buscar("/estabelecimentos", setEstabelecimentos, {
+          headers: { Authorization: usuario.token },
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    async function buscarProdutoPorId(id: string) {
+      try {
+        await buscar(`/produtos/${id}`, setProduto)
+      } catch (error) {
+        ToastAlerta("Produto não encontrado!", "erro")
+        navigate("/produtos")
+      }
+    }
+
+    buscarCategorias()
+    buscarEstabelecimentos()
+
+    if (id !== undefined) {
+      buscarProdutoPorId(id)
+    }
+  }, [id, handleLogout, usuario.token, navigate])
 
   function atualizarEstado(
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) {
     const { name, value } = e.target
+
     if (name === "categoria") {
       setProduto({
         ...produto,
         categoria: { id: Number(value), nome: "", produto: [] },
+      })
+    } else if (name === "estabelecimento") {
+      const est = estabelecimentos.find((e) => e.id === Number(value))
+      setProduto({
+        ...produto,
+        estabelecimento: est || undefined,
       })
     } else {
       setProduto({
@@ -83,6 +108,7 @@ export function FormProduto() {
   async function gerarNovoProduto(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsLoading(true)
+
     try {
       if (id !== undefined) {
         await atualizar(`/produtos/atualizar`, produto, setProduto, {
@@ -95,10 +121,10 @@ export function FormProduto() {
         })
         ToastAlerta("Produto cadastrado!", "sucesso")
       }
-      navigate("/perfil")
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    } catch (error: any) {
-      ToastAlerta("Erro ao salvar", "erro")
+
+      navigate("/produtos")
+    } catch (error) {
+      ToastAlerta("Erro ao salvar o produto", "erro")
     } finally {
       setIsLoading(false)
     }
@@ -107,151 +133,131 @@ export function FormProduto() {
   return (
     <div className="min-h-screen bg-zinc-50/50 px-6 pt-28 pb-10">
       <div className="mx-auto max-w-6xl">
-        {/* Header Compacto */}
+        {/* HEADER */}
         <div className="mb-8 flex items-center justify-between">
           <button
-            onClick={() => navigate("/perfil")}
-            className="flex items-center gap-2 text-xs font-black tracking-widest text-zinc-400 uppercase transition-all hover:text-emerald-600"
+            onClick={() => navigate("/produtos")}
+            className="flex items-center gap-2 text-xs font-black tracking-widest text-zinc-400 uppercase hover:text-emerald-600"
           >
-            <ArrowLeft size={18} /> Voltar ao Painel
+            <ArrowLeft size={18} /> Voltar
           </button>
-          <div className="text-right">
-            <h1 className="text-3xl font-black tracking-tighter text-zinc-800 uppercase italic">
-              {id !== undefined ? "Edição de Item" : "Novo Cadastro"}
-            </h1>
-          </div>
+
+          <h1 className="text-3xl font-black tracking-tighter text-zinc-800 uppercase italic">
+            {id !== undefined ? "Editar Produto" : "Novo Produto"}
+          </h1>
         </div>
 
         <form
           onSubmit={gerarNovoProduto}
-          className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12"
+          className="grid grid-cols-1 gap-8 lg:grid-cols-12"
         >
-          {/* COLUNA ESQUERDA: Dados Principais (7 Colunas) */}
-          <div className="space-y-6 rounded-[2.5rem] border border-zinc-100 bg-white p-8 shadow-xl shadow-zinc-200/50 md:p-10 lg:col-span-7">
-            <div className="mb-4 flex items-center gap-3 text-emerald-600">
+          {/* COLUNA ESQUERDA */}
+          <div className="space-y-6 rounded-[2.5rem] border border-zinc-100 bg-white p-10 shadow-xl lg:col-span-7">
+            <div className="flex items-center gap-3 text-emerald-600">
               <PlusCircle size={24} />
               <h3 className="text-sm font-black tracking-widest uppercase">
-                Informações de Venda
+                Informações
               </h3>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2">
               <div className="flex flex-col gap-2 md:col-span-2">
-                <label className="ml-1 text-[10px] font-black tracking-[0.2em] text-zinc-400 uppercase">
-                  Nome do Produto
+                <label className="text-xs font-black text-zinc-400 uppercase">
+                  Nome
                 </label>
                 <input
-                  type="text"
                   name="nome"
-                  placeholder="Ex: Smoothie Energético"
                   value={produto.nome}
                   onChange={atualizarEstado}
-                  className="rounded-2xl border-none bg-zinc-50 p-4 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="rounded-2xl bg-zinc-50 p-4 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 />
               </div>
 
               <div className="flex flex-col gap-2 md:col-span-2">
-                <label className="ml-1 text-[10px] font-black tracking-[0.2em] text-zinc-400 uppercase">
+                <label className="text-xs font-black text-zinc-400 uppercase">
                   Descrição
                 </label>
                 <input
-                  type="text"
                   name="descricao"
-                  placeholder="Breve descrição dos ingredientes..."
                   value={produto.descricao}
                   onChange={atualizarEstado}
-                  className="rounded-2xl border-none bg-zinc-50 p-4 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="rounded-2xl bg-zinc-50 p-4 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="ml-1 text-[10px] font-black tracking-[0.2em] text-zinc-400 uppercase">
-                  Preço Sugerido
+                <label className="text-xs font-black text-zinc-400 uppercase">
+                  Preço
                 </label>
                 <input
                   type="number"
                   name="preco"
-                  step="0.01"
                   value={produto.preco}
                   onChange={atualizarEstado}
-                  className="rounded-2xl border-none bg-zinc-50 p-4 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="rounded-2xl bg-zinc-50 p-4 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="ml-1 text-[10px] font-black tracking-[0.2em] text-zinc-400 uppercase">
-                  URL da Foto
+                <label className="text-xs font-black text-zinc-400 uppercase">
+                  Foto
                 </label>
                 <input
-                  type="text"
                   name="foto_produto"
-                  placeholder="Link da imagem..."
                   value={produto.foto_produto}
                   onChange={atualizarEstado}
-                  className="rounded-2xl border-none bg-zinc-50 p-4 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="rounded-2xl bg-zinc-50 p-4 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 />
               </div>
             </div>
           </div>
 
-          {/* COLUNA DIREITA: Nutrição e Categoria (5 Colunas) */}
+          {/* COLUNA DIREITA */}
           <div className="space-y-6 lg:col-span-5">
-            <div className="rounded-[2.5rem] border border-zinc-800 bg-zinc-900 p-8 text-white shadow-xl md:p-10">
+            {/* NUTRIÇÃO */}
+            <div className="rounded-[2.5rem] border border-zinc-800 bg-zinc-900 p-8 text-white shadow-xl">
               <div className="mb-6 flex items-center gap-3 text-emerald-400">
                 <Zap size={20} />
-                <h3 className="text-sm font-black tracking-widest uppercase">
-                  Ficha Nutricional
-                </h3>
+                <h3 className="text-sm font-black uppercase">Nutrição</h3>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                {[
-                  { label: "Calorias", name: "calorias", color: "orange" },
-                  { label: "Proteínas (g)", name: "proteinas", color: "blue" },
-                  {
-                    label: "Carbos (g)",
-                    name: "carboidratos",
-                    color: "emerald",
-                  },
-                  { label: "Gorduras (g)", name: "gorduras", color: "purple" },
-                ].map((f) => (
-                  <div key={f.name} className="flex flex-col gap-2">
-                    <label className="text-[9px] font-black text-zinc-500 uppercase">
-                      {f.label}
-                    </label>
+                {["calorias", "proteinas", "carboidratos", "gorduras"].map(
+                  (campo) => (
                     <input
-                      type="text"
-                      name={f.name}
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      value={(produto as any)[f.name]}
+                      key={campo}
+                      name={campo}
+                      value={(produto as any)[campo]}
                       onChange={atualizarEstado}
-                      className="rounded-xl border border-zinc-700 bg-zinc-800 p-3 text-sm font-black outline-none focus:border-emerald-500"
+                      placeholder={campo}
+                      className="rounded-xl border border-zinc-700 bg-zinc-800 p-3 text-sm font-black"
                     />
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </div>
 
-            <div className="rounded-[2.5rem] border border-zinc-100 bg-white p-8 shadow-lg shadow-zinc-200/50">
+            {/* CATEGORIA */}
+            <div className="rounded-[2.5rem] border border-zinc-100 bg-white p-8 shadow-lg">
               <div className="mb-4 flex items-center gap-3 text-emerald-600">
                 <LayoutGrid size={20} />
-                <h3 className="text-sm font-black tracking-widest uppercase">
-                  Classificação
-                </h3>
+                <h3 className="text-sm font-black uppercase">Categoria</h3>
               </div>
+
               <select
                 name="categoria"
                 value={produto.categoria?.id || ""}
                 onChange={atualizarEstado}
-                className="w-full cursor-pointer appearance-none rounded-2xl border-none bg-zinc-50 p-4 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full rounded-2xl bg-zinc-50 p-4 font-bold"
                 required
               >
                 <option value="" disabled>
-                  Selecione a Categoria
+                  Selecione
                 </option>
+
                 {categorias.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.nome}
@@ -259,21 +265,38 @@ export function FormProduto() {
                 ))}
               </select>
 
-              <div className="mt-8 flex gap-3">
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="flex flex-1 items-center justify-center gap-3 rounded-2xl bg-emerald-600 py-4 font-black text-white shadow-lg shadow-emerald-100 transition-all hover:bg-emerald-700 active:scale-95"
-                >
-                  {isLoading ? (
-                    <ClipLoader color="#fff" size={20} />
-                  ) : (
-                    <>
-                      <Save size={20} /> Salvar
-                    </>
-                  )}
-                </button>
-              </div>
+              {/* ESTABELECIMENTO */}
+
+              <select
+                name="estabelecimento"
+                value={produto.estabelecimento?.id || ""}
+                onChange={atualizarEstado}
+                className="mt-4 w-full rounded-2xl bg-zinc-50 p-4 font-bold"
+                required
+              >
+                <option value="">Estabelecimento</option>
+
+                {estabelecimentos
+                  .filter((est) => est.usuario?.id === usuario.id)
+                  .map((est) => (
+                    <option key={est.id} value={est.id}>
+                      {est.nome}
+                    </option>
+                  ))}
+              </select>
+
+              <button
+                type="submit"
+                className="mt-8 flex w-full items-center justify-center gap-3 rounded-2xl bg-emerald-600 py-4 font-black text-white hover:bg-emerald-700"
+              >
+                {isLoading ? (
+                  <ClipLoader color="#fff" size={20} />
+                ) : (
+                  <>
+                    <Save size={20} /> Salvar
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </form>

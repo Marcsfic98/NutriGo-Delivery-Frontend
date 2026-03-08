@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { Footer } from "./components/footer/Footer"
 import { FormEstabelecimento } from "./components/FormEstabelecimento"
-import { FormProduto } from "./components/formproduto/FormProduto"
 import { Navbar } from "./components/navbar/Navbar"
 import { ScrollToTop } from "./components/ScrollToTop"
 import { AuthProvider } from "./contexts/AuthContext"
@@ -18,6 +17,8 @@ import ListaPedidos from "./pages/pedido/ListaPedidos"
 import { Perfil } from "./pages/Perfil"
 import { Produtos } from "./pages/Produtos"
 import { Sobre } from "./pages/Sobre"
+import PageEstabelecimento from "./pages/PageEstabelecimento"
+import { FormProduto } from "./components/formproduto/FormProduto"
 
 export function App() {
   return (
@@ -35,6 +36,10 @@ export function App() {
               <Route path="/perfil" element={<Perfil />} />
               <Route path="/produtos" element={<Produtos />} />
               <Route path="/cadastrarproduto" element={<FormProduto />} />
+              <Route
+                path="/estabelecimento/:id"
+                element={<PageEstabelecimento />}
+              />
               <Route path="/editarproduto/:id" element={<FormProduto />} />
               <Route path="/deletarproduto/:id" element={<FormProduto />} />
               <Route path="/estabelecimentos" element={<Estabelecimentos />} />

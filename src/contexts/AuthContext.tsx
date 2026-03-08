@@ -33,7 +33,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     foto: "",
     tipo: "",
     pedido: [],
-    estabelecimento: [],
+    estabelecimento: null ,
     token: "",
   })
 
