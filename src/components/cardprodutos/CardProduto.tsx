@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import ProdutoDetalhe from "../../pages/ProdutoDetalhe"
 
 interface CardProdutoProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   produtos: any[]
   titulo?: string
   isOwner?: boolean
@@ -15,8 +16,10 @@ export const CardProduto = ({
   isOwner = false,
 }: CardProdutoProps) => {
   const navigate = useNavigate()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleAction = (p: any) => {
     if (isOwner) {
       // Se for dono, navega para a página de formulário com o ID do produto

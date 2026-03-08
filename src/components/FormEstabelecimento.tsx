@@ -46,6 +46,7 @@ export function FormEstabelecimento() {
         await buscar(`/estabelecimentos/${id}`, setEstabelecimento, {
           headers: { Authorization: usuario.token },
         })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
       } catch (error: any) {
         ToastAlerta("Erro ao carregar dados do estabelecimento", "erro")
         navigate("/perfil")
@@ -102,6 +103,7 @@ export function FormEstabelecimento() {
         ToastAlerta("Estabelecimento cadastrado!", "sucesso")
       }
       navigate("/perfil")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response?.status === 401) {
         handleLogout()
@@ -123,6 +125,7 @@ export function FormEstabelecimento() {
       })
       ToastAlerta("Excluído com sucesso", "sucesso")
       navigate("/perfil")
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       ToastAlerta("Erro ao excluir", "erro")
     } finally {

@@ -38,7 +38,7 @@ function Carrinho() {
 
       await finalizarPedido(estId, taxaEntrega)
       ToastAlerta("Pedido realizado com sucesso!", "sucesso")
-      navigate("/pedidos") // Redireciona para a lista de pedidos
+      navigate("/perfil") // Redireciona para a lista de pedidos
     } catch (e) {
       ToastAlerta("Erro ao finalizar o pedido. Verifique sua conexão.", "erro")
       console.error(e)

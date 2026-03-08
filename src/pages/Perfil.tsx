@@ -78,6 +78,7 @@ export function Perfil() {
       ToastAlerta("Perfil atualizado! Faça login novamente.", "sucesso")
       handleLogout()
       navigate("/")
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       ToastAlerta("Erro ao atualizar o perfil.", "erro")
     } finally {
@@ -89,6 +90,7 @@ export function Perfil() {
   const renderEstabelecimentoPanel = () => {
     const meuEstabelecimento = usuarioCompleto?.estabelecimento?.[0]
     const produtosDoDono =
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       usuarioCompleto?.estabelecimento?.flatMap((est: any) => est.produto) || []
 
     return (
