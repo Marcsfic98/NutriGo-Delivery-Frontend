@@ -44,7 +44,7 @@ export function FormProduto() {
       navigate("/")
     } else if (usuario.tipo !== "ESTABELECIMENTO") {
       ToastAlerta("Acesso negado", "erro")
-      navigate("/produtos")
+      navigate("/home")
     }
   }, [usuario.token, navigate, usuario.tipo])
 
@@ -75,7 +75,7 @@ export function FormProduto() {
       } catch (error) {
         console.error(error)
         ToastAlerta("Produto não encontrado!", "erro")
-        navigate("/produtos")
+        navigate("/home")
       }
     }
 
@@ -126,7 +126,7 @@ export function FormProduto() {
         })
         ToastAlerta("Produto cadastrado com sucesso", "sucesso")
       }
-      navigate("/produtos")
+      navigate("/perfil")
     } catch (error: unknown) {
       console.error(error)
       ToastAlerta("Erro ao salvar o produto", "erro")
@@ -260,37 +260,11 @@ export function FormProduto() {
               ))}
             </select>
           </div>
-
-          <div className="flex flex-col">
-            <label className="font-bold text-gray-700">Estabelecimento</label>
-            <select
-              name="estabelecimento"
-              value={produto.estabelecimento?.id || ""}
-              onChange={atualizarEstado}
-              className="rounded-lg border bg-white p-3 focus:border-green-600 focus:outline-none"
-              required
-            >
-              <option value="" disabled>
-                Selecione um Estabelecimento
-              </option>
-              {estabelecimentos
-                .filter(
-                  (estabelecimento) =>
-                    estabelecimento.usuario?.id === usuario.id,
-                )
-                .map((estabelecimento) => (
-                  <option key={estabelecimento.id} value={estabelecimento.id}>
-                    {estabelecimento.nome}
-                  </option>
-                ))}
-            </select>
-          </div>
         </div>
 
         <div className="mt-4 flex justify-end gap-4">
           <button
             type="button"
-            // Por enquanto vai ficar voltando para o perfil depois vai voltar para estabelecimento do usuario
             onClick={() => navigate("/perfil")}
             className="rounded-lg bg-red-400 px-6 py-3 font-bold text-white hover:bg-red-500"
           >

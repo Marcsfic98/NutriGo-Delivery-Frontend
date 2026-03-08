@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { Footer } from "./components/footer/Footer"
+import { FormEstabelecimento } from "./components/FormEstabelecimento"
 import { FormProduto } from "./components/formproduto/FormProduto"
 import { Navbar } from "./components/navbar/Navbar"
 import { ScrollToTop } from "./components/ScrollToTop"
@@ -43,6 +44,10 @@ export function App() {
               <Route path="/cadastrarPedido" element={<FormPedido />} />
               <Route path="/editarPedido/:id" element={<FormPedido />} />
               <Route path="/deletarPedido/:id" element={<DeletarPedido />} />
+              <Route
+                path="/editarestabelecimento/:id"
+                element={<FormEstabelecimento />}
+              />
               <Route path="/cart" element={<Carrinho />} />
             </Routes>
           </div>
