@@ -1,17 +1,22 @@
-import { Edit, Flame, ShoppingCart } from "lucide-react"
-import { useState } from "react"
+import { Edit, Flame, ShoppingCart, Trash2 } from "lucide-react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { AuthContext } from "../../contexts/AuthContext"
 import ProdutoDetalhe from "../../pages/ProdutoDetalhe"
+import { deletar } from "../../services/Service"
 
 interface CardProdutoProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   produtos: any[]
+  // Adicionamos setProdutos para atualizar a lista sem dar reload na página
+  setProdutos?: React.Dispatch<React.SetStateAction<any[]>>
   titulo?: string
   isOwner?: boolean
 }
 
 export const CardProduto = ({
   produtos,
+  setProdutos,
   titulo,
   isOwner = false,
 }: CardProdutoProps) => {
@@ -19,14 +24,41 @@ export const CardProduto = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
 
+  const { usuario } = useContext(AuthContext)
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleAction = (p: any) => {
     if (isOwner) {
-      // Se for dono, navega para a página de formulário com o ID do produto
       navigate(`/editarProduto/${p.id}`)
     } else {
-      // Se for cliente, abre o modal de detalhes (comportamento original)
       setSelectedProduct(p)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Tem certeza que deseja excluir este produto?")) {
+      try {
+        // Realiza a exclusão no backend enviando o token no header
+        await deletar(`/produtos/${id}`, {
+          headers: {
+            Authorization: usuario.token,
+          },
+        })
+
+        alert("Produto deletado com sucesso!")
+
+        navigate("/home")
+        if (setProdutos) {
+          setProdutos(produtos.filter((p) => p.id !== id))
+        }
+      } catch (error: any) {
+        console.error("Erro ao deletar:", error)
+        if (error.response?.status === 401) {
+          alert("Você não tem permissão ou sua sessão expirou.")
+        } else {
+          alert("Erro ao excluir o produto.")
+        }
+      }
     }
   }
 
@@ -83,16 +115,26 @@ export const CardProduto = ({
                   </span>
                 </div>
 
-                <button
-                  onClick={() => handleAction(p)}
-                  className={`rounded-xl p-2.5 text-white shadow-lg transition active:scale-95 ${
-                    isOwner
-                      ? "bg-amber-500 hover:bg-amber-600"
-                      : "bg-green-600 hover:bg-green-700"
-                  }`}
-                >
-                  {isOwner ? <Edit size={18} /> : <ShoppingCart size={18} />}
-                </button>
+                <div className="flex gap-2">
+                  {isOwner && (
+                    <button
+                      onClick={() => handleDelete(p.id)}
+                      className="rounded-xl bg-red-50 p-2.5 text-red-600 transition hover:bg-red-100 active:scale-95"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleAction(p)}
+                    className={`rounded-xl p-2.5 text-white shadow-lg transition active:scale-95 ${
+                      isOwner
+                        ? "bg-amber-500 hover:bg-amber-600"
+                        : "bg-green-600 hover:bg-green-700"
+                    }`}
+                  >
+                    {isOwner ? <Edit size={18} /> : <ShoppingCart size={18} />}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

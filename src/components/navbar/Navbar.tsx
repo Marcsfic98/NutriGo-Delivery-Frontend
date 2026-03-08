@@ -1,4 +1,4 @@
-import { useContext, useState } from "react" // Adicionado useState
+import { useContext, useState } from "react"
 import {
   FaBars,
   FaCartPlus,
@@ -8,10 +8,12 @@ import {
 } from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext"
+import { CartContext } from "../../contexts/CartContext"
 import { ToastAlerta } from "../../util/ToastAlerta"
 
 export const Navbar = () => {
   const { usuario, handleLogout } = useContext(AuthContext)
+  const { quantidadeTotal } = useContext(CartContext)
   const navigate = useNavigate()
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -38,13 +40,20 @@ export const Navbar = () => {
 
         <div className="w-24"></div>
 
+        {/* Botão Mobile com Badge (opcional se quiser mostrar no ícone do menu) */}
         <button
-          className="z-50 text-green-800 md:hidden"
+          className="relative z-50 text-green-800 md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
+          {!isMenuOpen && quantidadeTotal > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+              {quantidadeTotal}
+            </span>
+          )}
         </button>
 
+        {/* Menu Desktop */}
         <div className="hidden items-center gap-6 md:flex">
           <Link className="text-green-800 hover:text-yellow-600" to="/home">
             Home
@@ -65,18 +74,29 @@ export const Navbar = () => {
             Sobre
           </Link>
 
-          {usuario.tipo !== "USUARIO" ? (
-            <Link
-              className="text-green-800 hover:text-yellow-600"
-              to="/pedidos"
-            >
-              Pedidos
-            </Link>
-          ) : (
-            <Link className="text-green-800 hover:text-yellow-600" to="/cart">
-              <FaCartPlus size={22} />
-            </Link>
-          )}
+          {usuario.token !== "" &&
+            (usuario.tipo !== "USUARIO" ? (
+              <Link
+                className="text-green-800 hover:text-yellow-600"
+                to="/pedidos"
+              >
+                Pedidos
+              </Link>
+            ) : (
+              <Link
+                className="relative text-green-800 hover:text-yellow-600"
+                to="/cart"
+              >
+                <FaCartPlus size={22} />
+                {/* CIRCULO DO CARRINHO (DESKTOP) */}
+                {quantidadeTotal > 0 && (
+                  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full border border-white bg-green-800 text-[10px] font-bold text-white shadow-sm">
+                    {quantidadeTotal}
+                  </span>
+                )}
+              </Link>
+            ))}
+
           {usuario.token ? (
             <div className="flex items-center gap-4 border-l border-green-200 pl-4">
               <Link to="/perfil" className="group flex items-center gap-2">
@@ -111,6 +131,7 @@ export const Navbar = () => {
           )}
         </div>
 
+        {/* Menu Mobile */}
         {isMenuOpen && (
           <div className="absolute top-full left-0 flex w-full flex-col gap-4 border-t border-gray-100 bg-white p-6 shadow-lg md:hidden">
             <Link
@@ -141,13 +162,32 @@ export const Navbar = () => {
             >
               Estabelecimentos
             </Link>
-            <Link
-              onClick={() => setIsMenuOpen(false)}
-              className="text-green-800"
-              to="/pedidos"
-            >
-              Pedidos
-            </Link>
+
+            {/* Link de Pedidos ou Carrinho no Mobile */}
+            {usuario.token !== "" &&
+              (usuario.tipo !== "USUARIO" ? (
+                <Link
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-green-800"
+                  to="/pedidos"
+                >
+                  Pedidos
+                </Link>
+              ) : (
+                <Link
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-2 text-green-800"
+                  to="/cart"
+                >
+                  Carrinho
+                  {quantidadeTotal > 0 && (
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-800 text-[10px] font-bold text-white">
+                      {quantidadeTotal}
+                    </span>
+                  )}
+                </Link>
+              ))}
+
             <hr className="border-green-100" />
             {usuario.token ? (
               <div className="flex items-center justify-between">
@@ -157,8 +197,11 @@ export const Navbar = () => {
                   className="flex items-center gap-2"
                 >
                   <img
-                    src={usuario.foto || "..."}
-                    className="h-8 w-8 rounded-full"
+                    src={
+                      usuario.foto ||
+                      "https://ik.imagekit.io/yvn7qbnm7/undraw_pic_profile_re_7g2h.svg?updatedAt=1738096387060"
+                    }
+                    className="h-8 w-8 rounded-full border border-green-800"
                     alt="Perfil"
                   />
                   <span className="font-semibold text-green-800">
