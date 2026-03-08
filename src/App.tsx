@@ -33,7 +33,8 @@ export function App() {
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/produtos" element={<Produtos />} />
           <Route path="/cadastrarproduto" element={<FormProduto />} />
-          <Route path="/editarproduto" element={<FormProduto />} />
+          <Route path="/editarproduto/:id" element={<FormProduto />} />
+          <Route path="/deletarproduto/:id" element={<FormProduto />} />
           <Route path="/estabelecimentos" element={<Estabelecimentos />} />
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/contato" element={<Contato />} />

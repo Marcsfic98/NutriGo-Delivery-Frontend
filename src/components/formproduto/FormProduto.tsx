@@ -113,7 +113,7 @@ export function FormProduto() {
   async function gerarNovoProduto(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsLoading(true)
-
+    console.log(produto)
     try {
       if (id !== undefined) {
         await atualizar(`/produtos/atualizar`, produto, setProduto, {
@@ -300,7 +300,8 @@ export function FormProduto() {
         <div className="mt-4 flex justify-end gap-4">
           <button
             type="button"
-            onClick={() => navigate("/produtos")}
+            // Por enquanto vai ficar voltando para o perfil depois vai voltar para estabelecimento do usuario
+            onClick={() => navigate("/perfil")}
             className="rounded-lg bg-red-400 px-6 py-3 font-bold text-white hover:bg-red-500"
           >
             Cancelar
