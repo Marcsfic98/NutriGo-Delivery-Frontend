@@ -117,7 +117,7 @@ export function Perfil() {
                 onClick={() =>
                   navigate(`/editarestabelecimento/${meuEstabelecimento.id}`)
                 }
-                className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-bold transition hover:bg-slate-700"
+                className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-bold transition hover:bg-slate-700"
               >
                 <Settings size={16} /> CONFIGURAR LOJA
               </button>
@@ -132,7 +132,7 @@ export function Perfil() {
             </h3>
             <button
               onClick={() => navigate("/cadastrarProduto")}
-              className="flex items-center gap-2 rounded-xl bg-green-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-green-700"
+              className="flex cursor-pointer items-center gap-2 rounded-xl bg-green-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-green-700"
             >
               <PlusCircle size={18} /> ADICIONAR PRATO
             </button>
@@ -303,7 +303,7 @@ export function Perfil() {
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="rounded-xl bg-amber-400 px-6 py-2.5 text-sm font-black text-amber-900 shadow-lg hover:bg-amber-500"
+              className="cursor-pointer rounded-xl bg-amber-400 px-6 py-2.5 text-sm font-black text-amber-900 shadow-lg hover:bg-amber-500"
             >
               EDITAR PERFIL
             </button>
@@ -358,13 +358,13 @@ export function Perfil() {
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
-                className="px-6 py-2 font-bold text-gray-400"
+                className="cursor-pointer px-6 py-2 font-bold text-gray-400"
               >
                 CANCELAR
               </button>
               <button
                 type="submit"
-                className="rounded-2xl bg-lime-600 px-10 py-3 font-black text-white hover:bg-lime-700"
+                className="cursor-pointer rounded-2xl bg-lime-600 px-10 py-3 font-black text-white hover:bg-lime-700"
               >
                 {isLoading ? (
                   <ClipLoader color="#fff" size={18} />

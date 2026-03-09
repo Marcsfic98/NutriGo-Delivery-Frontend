@@ -121,14 +121,14 @@ export const CardProduto = ({
                   {isOwner && (
                     <button
                       onClick={() => handleDelete(p.id)}
-                      className="rounded-xl bg-red-50 p-2.5 text-red-600 transition hover:bg-red-100 active:scale-95"
+                      className="cursor-pointer rounded-xl bg-red-50 p-2.5 text-red-600 transition hover:bg-red-100 active:scale-95"
                     >
                       <Trash2 size={18} />
                     </button>
                   )}
                   <button
                     onClick={() => handleAction(p)}
-                    className={`rounded-xl p-2.5 text-white shadow-lg transition active:scale-95 ${
+                    className={`cursor-pointer rounded-xl p-2.5 text-white shadow-lg transition active:scale-95 ${
                       isOwner
                         ? "bg-amber-500 hover:bg-amber-600"
                         : "bg-green-600 hover:bg-green-700"

@@ -147,7 +147,7 @@ export function FormEstabelecimento() {
             <button
               type="button"
               onClick={excluirEstabelecimento}
-              className="flex items-center gap-1 text-xs font-bold text-red-500 hover:text-red-700"
+              className="flex cursor-pointer items-center gap-1 text-xs font-bold text-red-500 hover:text-red-700"
             >
               {isDeleting ? (
                 <ClipLoader size={14} color="#ef4444" />
@@ -243,14 +243,14 @@ export function FormEstabelecimento() {
           <button
             type="button"
             onClick={() => navigate("/perfil")}
-            className="px-6 py-3 font-black text-slate-400"
+            className="cursor-pointer px-6 py-3 font-black text-slate-400"
           >
             CANCELAR
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="flex min-w-[140px] items-center justify-center rounded-xl bg-lime-500 px-8 py-3 font-black text-slate-950 shadow-lg hover:bg-lime-400 disabled:bg-slate-200"
+            className="flex min-w-35 cursor-pointer items-center justify-center rounded-xl bg-lime-500 px-8 py-3 font-black text-slate-950 shadow-lg hover:bg-lime-400 disabled:bg-slate-200"
           >
             {isLoading ? (
               <ClipLoader color="#000" size={20} />

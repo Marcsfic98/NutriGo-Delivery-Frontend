@@ -240,7 +240,7 @@ export function Cadastro() {
               </Link>
               <button
                 type="submit"
-                className="flex w-full items-center justify-center rounded-2xl bg-green-600 py-4 font-bold text-white shadow-lg shadow-green-200 transition-all hover:bg-green-700 active:scale-95 sm:w-2/3"
+                className="flex w-full cursor-pointer items-center justify-center rounded-2xl bg-green-600 py-4 font-bold text-white shadow-lg shadow-green-200 transition-all hover:bg-green-700 active:scale-95 sm:w-2/3"
               >
                 {isLoading ? (
                   <ClipLoader color="#ffffff" size={24} />
