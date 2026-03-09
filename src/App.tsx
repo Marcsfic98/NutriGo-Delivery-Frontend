@@ -1,6 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import { Footer } from "./components/footer/Footer"
 import { FormEstabelecimento } from "./components/FormEstabelecimento"
+import { FormProduto } from "./components/formproduto/FormProduto"
 import { Navbar } from "./components/navbar/Navbar"
 import { ScrollToTop } from "./components/ScrollToTop"
 import { AuthProvider } from "./contexts/AuthContext"
@@ -11,6 +14,7 @@ import { Contato } from "./pages/Contato"
 import { Estabelecimentos } from "./pages/Estabelecimentos"
 import { Home } from "./pages/Home"
 import { Login } from "./pages/Login"
+import PageEstabelecimento from "./pages/PageEstabelecimento"
 import DeletarPedido from "./pages/pedido/DeletarPedido"
 import FormPedido from "./pages/pedido/FormPedido"
 import ListaPedidos from "./pages/pedido/ListaPedidos"
@@ -18,12 +22,10 @@ import { Perfil } from "./pages/Perfil"
 import { Produtos } from "./pages/Produtos"
 import { Sobre } from "./pages/Sobre"
 
-import { FormProduto } from "./components/formproduto/FormProduto"
-import PageEstabelecimento from "./pages/PageEstabelecimento"
-
 export function App() {
   return (
     <AuthProvider>
+      <ToastContainer />
       <CartProvider>
         <BrowserRouter>
           <ScrollToTop />
