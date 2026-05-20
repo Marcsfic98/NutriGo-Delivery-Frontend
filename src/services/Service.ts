@@ -8,7 +8,7 @@ import axios from "axios";
 
 const api = axios.create({
   // baseURL: "http://localhost:4000",
-  baseURL: "https://aplicativo-de-delivery-backend.onrender.com/swagger",
+  baseURL: "https://aplicativo-de-delivery-backend.onrender.com",
 })
 
 export const cadastrarUsuario = async (
