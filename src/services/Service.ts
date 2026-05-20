@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
 /* eslint-disable @typescript-eslint/no-wrapper-object-types */
-import axios from "axios"
+import axios from "axios";
 
 // const api = axios.create({
 //   baseURL: import.meta.env.VITE_API_URL
@@ -8,7 +8,7 @@ import axios from "axios"
 
 const api = axios.create({
   // baseURL: "http://localhost:4000",
-  baseURL: "https://aplicativo-de-delivery-backend-1.onrender.com",
+  baseURL: "https://aplicativo-de-delivery-backend.onrender.com/swagger",
 })
 
 export const cadastrarUsuario = async (
