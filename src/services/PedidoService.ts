@@ -1,11 +1,11 @@
-import axios from "axios"
-import { cadastrar, atualizar, deletar } from "./Service"
-import type Pedido from "../models/Pedido"
+import axios from "axios";
+import type Pedido from "../models/Pedido";
+import { atualizar, cadastrar, deletar } from "./Service";
 
 const api = axios.create({
   baseURL:
     import.meta.env.VITE_API_URL ??
-    "https://aplicativo-de-delivery-backend-1.onrender.com",
+    "https://aplicativo-de-delivery-backend.onrender.com/swagger",
 })
 
 const authHeader = (token: string) => ({
