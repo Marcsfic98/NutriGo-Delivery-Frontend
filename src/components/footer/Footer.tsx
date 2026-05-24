@@ -1,6 +1,4 @@
 export function Footer() {
-  const data = new Date().getFullYear()
-
   return (
     <footer className="border-t border-gray-100 bg-gray-950 py-12 text-gray-400 md:py-16">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 md:grid-cols-4">
