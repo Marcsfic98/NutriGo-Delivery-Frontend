@@ -1,4 +1,3 @@
-import { useState } from "react"
 import type { Swiper as SwiperType } from "swiper"
 import { Autoplay, Navigation } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -63,8 +62,6 @@ const foodData: FoodItem[] = [
 ]
 
 export function Home() {
-  const [activeIndex, setActiveIndex] = useState(0)
-
   const handleProgress = (swiper: SwiperType) => {
     swiper.slides.forEach((slide) => {
       const slideProgress = (slide as any).progress || 0
@@ -123,10 +120,10 @@ export function Home() {
 
   return (
     <div className="min-h-screen bg-white text-gray-800 antialiased">
-      {/* 2. HERO BANNER PRINCIPAL (MARKETPLACE & ECOSSISTEMA) */}
+      {/* 2. HERO BANNER PRINCIPAL */}
       <section className="relative flex min-h-[95vh] flex-col items-center justify-center overflow-hidden bg-[url('/img/banner/bghome.jpg')] bg-cover bg-center bg-no-repeat px-4 pt-28 pb-20 text-white">
-        <div className="absolute inset-0 bg-black/50" />{" "}
-        {/* Overlay escuro para destacar texto */}
+        <div className="absolute inset-0 bg-black/50" />
+
         <div className="z-10 mb-8 max-w-3xl text-center md:mb-14">
           <span className="rounded-full border border-green-400/30 bg-green-500/20 px-4 py-1.5 text-xs font-semibold tracking-wide text-green-400 uppercase">
             O Ecossistema da Alimentação Saudável
@@ -150,7 +147,7 @@ export function Home() {
             </button>
           </div>
         </div>
-        {/* Swiper mantido como vitrine tecnológica do que existe dentro do ecossistema */}
+
         <div className="relative z-10 w-full max-w-5xl">
           <Swiper
             modules={[Navigation, Autoplay]}
@@ -170,7 +167,6 @@ export function Home() {
                 slide.style.transition = `${duration}ms ease-out`
               })
             }}
-            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             breakpoints={{
               320: { slidesPerView: 1, spaceBetween: 0 },
               768: { slidesPerView: 3, spaceBetween: 30 },
@@ -196,7 +192,7 @@ export function Home() {
         </div>
       </section>
 
-      {/* 3. SEÇÃO DE MÉTRICAS / PROVA SOCIAL (ESSENCIAL PARA SAAS) */}
+      {/* 3. SEÇÃO DE MÉTRICAS */}
       <section className="border-b border-gray-100 bg-gray-50 py-10">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 text-center md:grid-cols-4">
           {metrics.map((metric, idx) => (
@@ -212,7 +208,7 @@ export function Home() {
         </div>
       </section>
 
-      {/* 4. PARA QUEM VENDE: SOLUÇÃO B2B (SAAS) */}
+      {/* 4. PARA QUEM VENDE */}
       <section id="como-funciona" className="bg-white px-4 py-16 md:py-24">
         <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
           <div>
@@ -245,7 +241,6 @@ export function Home() {
             </div>
           </div>
           <div className="rounded-3xl border border-gray-800 bg-gray-900 p-4 shadow-2xl">
-            {/* Elemento visual simulando o Dashboard do SaaS corporativo */}
             <div className="flex aspect-[4/3] w-full flex-col justify-between rounded-2xl bg-gray-950 p-6 text-white">
               <div className="flex items-center justify-between border-b border-gray-800 pb-4">
                 <span className="text-xs font-bold tracking-wider text-gray-400 uppercase">
@@ -270,7 +265,7 @@ export function Home() {
                     📦 48 Pedidos Hoje
                   </div>
                   <div className="rounded-xl border border-gray-800 bg-gray-900 p-3">
-                    🥗 12 Novos Pratos
+                    🥗 12 Pratos Ativos
                   </div>
                 </div>
               </div>
@@ -282,7 +277,7 @@ export function Home() {
         </div>
       </section>
 
-      {/* 5. PARA QUEM COMPRA: SOLUÇÃO B2C (FILTROS DE OBJETIVOS) */}
+      {/* 5. PARA QUEM COMPRA */}
       <section id="beneficios" className="bg-gray-50 px-4 py-16 md:py-20">
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto mb-12 max-w-xl text-center">
@@ -338,7 +333,7 @@ export function Home() {
         </div>
       </section>
 
-      {/* 6. REVIEWS & CASES DE SUCESSO (SOCIOS E CLIENTES) */}
+      {/* 6. REVIEWS */}
       <section id="depoimentos" className="w-full bg-white py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-6 text-center">
           <h2 className="text-3xl font-extrabold text-green-600 uppercase md:text-4xl">
