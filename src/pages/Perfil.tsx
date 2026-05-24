@@ -54,6 +54,7 @@ export function Perfil() {
         (res: Usuario) => setUsuarioCompleto(res),
         { headers: { Authorization: usuario.token } },
       )
+      console.log(usuarioCompleto)
     } catch (error) {
       console.error("Erro ao carregar dados do perfil:", error)
     }
@@ -75,10 +76,9 @@ export function Perfil() {
           headers: { Authorization: usuario.token },
         },
       )
-      ToastAlerta("Perfil atualizado! Faça login novamente.", "sucesso")
+      ToastAlerta("Perfil updated! Faça login novamente.", "sucesso")
       handleLogout()
       navigate("/")
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       ToastAlerta("Erro ao atualizar o perfil.", "erro")
     } finally {
@@ -89,7 +89,6 @@ export function Perfil() {
   // --- PAINEL DO ESTABELECIMENTO (DONO) ---
   const renderEstabelecimentoPanel = () => {
     const meuEstabelecimento = usuarioCompleto?.estabelecimento
-
     const produtosDoDono = usuarioCompleto?.estabelecimento?.produto || []
 
     return (
@@ -181,7 +180,8 @@ export function Perfil() {
                   </div>
                   <div>
                     <p className="text-sm font-bold text-lime-600">
-                      {(pedido.estabelecimento as Estabelecimento).nome}
+                      {(pedido.estabelecimento as Estabelecimento)?.nome ||
+                        "Loja indisponível"}
                     </p>
                     <p className="text-xs font-medium text-gray-500">
                       Pedido #{pedido.id}
@@ -214,34 +214,41 @@ export function Perfil() {
 
               <div className="px-6 py-4">
                 <div className="space-y-3">
-                  {pedido.itensPedido?.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50/50 p-3"
-                    >
-                      <div className="flex items-center gap-3">
-                        {item.produto?.foto_produto && (
-                          <img
-                            src={item.produto.foto_produto}
-                            alt={item.produto.nome}
-                            className="h-12 w-12 rounded-lg object-cover"
-                          />
-                        )}
-                        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-lime-100 text-sm font-bold text-lime-700">
-                          {item.quantidade}x
-                        </span>
-                        <p className="text-sm font-bold text-gray-800">
-                          {item.produto?.nome}
+                  {/* CORREÇÃO DO ERRO: Blindagem completa usando item?. e fallback de array vazio */}
+                  {(pedido.itensPedido ?? []).map((item) => {
+                    if (!item) return null // Ignora itens fantasmas ou corrompidos
+                    return (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50/50 p-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          {item.produto?.foto_produto && (
+                            <img
+                              src={item.produto.foto_produto}
+                              alt={item.produto.nome}
+                              className="h-12 w-12 rounded-lg object-cover"
+                            />
+                          )}
+                          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-lime-100 text-sm font-bold text-lime-700">
+                            {item.quantidade || 0}x
+                          </span>
+                          <p className="text-sm font-bold text-gray-800">
+                            {item.produto?.nome || "Produto Removido"}
+                          </p>
+                        </div>
+                        <p className="text-sm font-bold text-gray-700">
+                          R${" "}
+                          {(
+                            Number(item.preco_unitario || 0) *
+                            (item.quantidade || 0)
+                          )
+                            .toFixed(2)
+                            .replace(".", ",")}
                         </p>
                       </div>
-                      <p className="text-sm font-bold text-gray-700">
-                        R${" "}
-                        {(Number(item.preco_unitario) * item.quantidade)
-                          .toFixed(2)
-                          .replace(".", ",")}
-                      </p>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
 
@@ -250,7 +257,10 @@ export function Perfil() {
                   Total Pago
                 </span>
                 <span className="text-2xl font-black text-lime-700">
-                  R$ {Number(pedido.valor_total).toFixed(2).replace(".", ",")}
+                  R${" "}
+                  {Number(pedido.valor_total || 0)
+                    .toFixed(2)
+                    .replace(".", ",")}
                 </span>
               </div>
             </div>

@@ -4,47 +4,77 @@ import { ClipLoader } from "react-spinners"
 import { AuthContext } from "../contexts/AuthContext"
 import { ToastAlerta } from "../util/ToastAlerta"
 
+// Função auxiliar para decodificar o payload de um JWT sem bibliotecas externas
+function decodificarToken(token: string): any {
+  try {
+    const base64Url = token.split(".")[1]
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
+    const jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join(""),
+    )
+    return JSON.parse(jsonPayload)
+  } catch (error) {
+    console.error("Erro ao decodificar o token JWT:", error)
+    return null
+  }
+}
+
 export function GoogleSuccess() {
   const navigate = useNavigate()
   const { setUsuario } = useContext(AuthContext)
-
-  // Cria uma referência para travar execuções duplicadas do useEffect
   const processado = useRef(false)
 
   useEffect(() => {
-    // Se já processou o login com sucesso uma vez, não faz mais nada e sai fora
     if (processado.current) return
 
     const urlParams = new URLSearchParams(window.location.search)
 
     const token = urlParams.get("token")
-    const idParam = urlParams.get("id")
     const usuarioParam = urlParams.get("usuario")
     const nome = urlParams.get("nome")
     const foto = urlParams.get("foto")
 
     if (token && usuarioParam) {
-      // Ativa a trava imediatamente para ignorar a segunda renderização fantasma
       processado.current = true
 
-      console.log("=== [GOOGLE OAUTH] PARÂMETROS DA URL (SUCESSO) ===")
-      console.log("ID capturado:", idParam)
+      // 1. Extrai o ID real diretamente de dentro do Token JWT (Garantia Absoluta!)
+      const tokenLimpo = token.replace("Bearer ", "")
+      const payloadDecodificado = decodificarToken(tokenLimpo)
 
-      const idConvertido = idParam ? parseInt(idParam, 10) : 0
+      // Tenta pegar o id do token. Se não achar, tenta da URL. Se tudo falhar, usa 0.
+      const idDoToken = payloadDecodificado?.id
+      const idDaUrl = urlParams.get("id")
+      const idFinal = idDoToken
+        ? Number(idDoToken)
+        : idDaUrl
+          ? parseInt(idDaUrl, 10)
+          : 0
+
+      console.log("=== [GOOGLE OAUTH] DECODIFICAÇÃO DE SEGURANÇA ===")
+      console.log("ID extraído do JWT:", idDoToken)
+      console.log("ID extraído da URL:", idDaUrl)
+      console.log("ID final que será gravado:", idFinal)
 
       const dadosUsuario = {
-        id: isNaN(idConvertido) ? 0 : idConvertido,
+        id: isNaN(idFinal) ? 0 : idFinal,
         nome: decodeURIComponent(nome || ""),
         usuario: decodeURIComponent(usuarioParam),
         senha: "",
         foto: decodeURIComponent(foto || ""),
-        tipo: "USUARIO",
+        tipo: payloadDecodificado?.role || "USUARIO", // Também pega o perfil (role) do token se disponível
         pedido: [],
         estabelecimento: null,
         token: token,
       }
 
-      console.log("=== [GOOGLE OAUTH] SALVANDO USUÁRIO REAL ===", dadosUsuario)
+      console.log(
+        "=== [GOOGLE OAUTH] GRAVANDO NO LOCALSTORAGE ===",
+        dadosUsuario,
+      )
 
       setUsuario(dadosUsuario)
 
@@ -53,14 +83,10 @@ export function GoogleSuccess() {
       }
 
       ToastAlerta("Autenticado via Google com sucesso!", "sucesso")
-
-      // Força o redirecionamento imediato para a Home
       navigate("/home", { replace: true })
     } else {
-      // Só dispara o erro se a primeira tentativa REAL falhar e não houver token nenhum
       if (!processado.current && !token) {
-        console.warn("Aviso: Parâmetros ausentes na leitura atual do ciclo.")
-        // Removemos o redirecionamento forçado do else para não chutar o usuário logado de volta pro login
+        console.warn("Aviso: Parâmetros ausentes no ciclo de renderização.")
       }
     }
   }, [navigate, setUsuario])
