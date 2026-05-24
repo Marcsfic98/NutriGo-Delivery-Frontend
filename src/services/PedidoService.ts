@@ -4,7 +4,6 @@ import { atualizar, cadastrar, deletar } from "./Service";
 
 const api = axios.create({
   baseURL:
-    import.meta.env.VITE_API_URL ??
     "https://aplicativo-de-delivery-backend.onrender.com",
 })
 

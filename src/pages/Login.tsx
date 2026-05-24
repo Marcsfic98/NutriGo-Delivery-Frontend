@@ -23,6 +23,7 @@ export function Login() {
 
   useEffect(() => {
     if (usuario?.token !== "") {
+      console.log(usuario)
       navigate("/home")
     }
   }, [usuario, navigate])
