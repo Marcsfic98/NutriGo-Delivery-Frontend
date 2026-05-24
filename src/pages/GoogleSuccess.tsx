@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { ClipLoader } from "react-spinners"
 import { AuthContext } from "../contexts/AuthContext"
+import { ToastAlerta } from "../util/ToastAlerta"
 
 export function GoogleSuccess() {
   const [searchParams] = useSearchParams()
@@ -15,23 +16,29 @@ export function GoogleSuccess() {
     const foto = searchParams.get("foto")
 
     if (token && usuarioParam) {
+      // Objeto completo com TODOS os campos exigidos pela interface UsuarioComToken
       const dadosUsuario = {
         id: 0,
         nome: decodeURIComponent(nome || ""),
         usuario: decodeURIComponent(usuarioParam),
         senha: "",
         foto: decodeURIComponent(foto || ""),
+        tipo: "USUARIO", // Incluído para bater com o Enum do backend
+        pedido: [], // Array vazio exigido pelo modelo
+        estabelecimento: null, // Campo do relacionamento com estabelecimento
         token: token,
       }
 
-      // Atualiza o estado global do contexto
       setUsuario(dadosUsuario)
 
-      // Se o seu AuthContext salvar no localStorage para não perder o F5, faça aqui:
-      localStorage.setItem("usuarioLogin", JSON.stringify(dadosUsuario))
+      if (localStorage) {
+        localStorage.setItem("usuarioLogin", JSON.stringify(dadosUsuario))
+      }
 
+      ToastAlerta("Autenticado via Google com sucesso!", "sucesso")
       navigate("/home")
     } else {
+      ToastAlerta("Falha na sincronização com o Google.", "erro")
       navigate("/login")
     }
   }, [searchParams, navigate, setUsuario])
