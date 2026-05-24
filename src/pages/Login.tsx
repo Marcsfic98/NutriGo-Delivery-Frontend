@@ -42,7 +42,8 @@ export function Login() {
 
   // Alinhado com o fluxo OAuth2 via Backend
   function loginComGoogle() {
-    window.location.href = "http://localhost:4000/auth/google"
+    window.location.href =
+      "https://aplicativo-de-delivery-backend.onrender.com/auth/google"
   }
 
   return (
