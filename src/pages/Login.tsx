@@ -6,6 +6,7 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from "react"
+import { FcGoogle } from "react-icons/fc"
 import { Link, useNavigate } from "react-router-dom"
 import { ClipLoader } from "react-spinners"
 import { AuthContext } from "../contexts/AuthContext"
@@ -14,9 +15,15 @@ import type UsuarioLogin from "../models/UsuarioLogin"
 export function Login() {
   const navigate = useNavigate()
   const { usuario, handleLogin, isLoading } = useContext(AuthContext)
-  const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>(
-    {} as UsuarioLogin,
-  )
+
+  const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>({
+    id: 0,
+    nome: "",
+    usuario: "",
+    senha: "",
+    foto: "",
+    token: "",
+  })
 
   useEffect(() => {
     if (usuario?.token !== "") {
@@ -34,6 +41,12 @@ export function Login() {
   function login(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     handleLogin(usuarioLogin)
+  }
+
+  // Alinhado com o fluxo OAuth2 via Backend
+  function loginComGoogle() {
+    window.location.href =
+      "https://aplicativo-de-delivery-backend.onrender.com/auth/google"
   }
 
   return (
@@ -102,7 +115,8 @@ export function Login() {
 
             <button
               type="submit"
-              className="mt-4 flex w-full cursor-pointer items-center justify-center rounded-2xl bg-green-600 py-4 font-bold text-white shadow-lg shadow-green-200 transition-all hover:bg-green-700 active:scale-95"
+              disabled={isLoading}
+              className="mt-2 flex w-full cursor-pointer items-center justify-center rounded-2xl bg-green-600 py-4 font-bold text-white shadow-lg shadow-green-200 transition-all hover:bg-green-700 active:scale-95 disabled:opacity-50"
             >
               {isLoading ? (
                 <ClipLoader color="#ffffff" size={24} />
@@ -111,6 +125,22 @@ export function Login() {
               )}
             </button>
           </form>
+
+          <div className="relative my-6 flex items-center justify-center">
+            <div className="w-full border-t border-gray-200"></div>
+            <span className="absolute bg-white px-3 text-xs tracking-wider text-gray-400 uppercase">
+              ou
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={loginComGoogle}
+            className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border border-gray-200 bg-white py-3.5 font-semibold text-gray-700 shadow-sm transition-all hover:border-gray-300 hover:bg-gray-50 active:scale-95"
+          >
+            <FcGoogle size={24} />
+            <span>Entrar com o Google</span>
+          </button>
 
           <div className="mt-8 text-center text-sm text-gray-500">
             Ainda não faz parte do NutriGo?{" "}

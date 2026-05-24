@@ -12,6 +12,7 @@ import { Cadastro } from "./pages/Cadastro"
 import Carrinho from "./pages/Cart"
 import { Contato } from "./pages/Contato"
 import { Estabelecimentos } from "./pages/Estabelecimentos"
+import { GoogleSuccess } from "./pages/GoogleSuccess"
 import { Home } from "./pages/Home"
 import { Login } from "./pages/Login"
 import PageEstabelecimento from "./pages/PageEstabelecimento"
@@ -57,6 +58,7 @@ export function App() {
                 element={<FormEstabelecimento />}
               />
               <Route path="/cart" element={<Carrinho />} />
+              <Route path="/google-success" element={<GoogleSuccess />} />
             </Routes>
           </div>
           <Footer />

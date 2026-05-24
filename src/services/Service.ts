@@ -7,7 +7,7 @@ import axios from "axios";
 // });
 
 const api = axios.create({
-  // baseURL: "http://localhost:4000",
+   //baseURL: "http://localhost:4000",
   baseURL: "https://aplicativo-de-delivery-backend.onrender.com",
 })
 
@@ -26,6 +26,7 @@ export const login = async (url: string, dados: Object, setDados: Function) => {
   console.log(resposta.data)
   setDados(resposta.data)
 }
+
 
 export const buscar = async (
   url: string,
