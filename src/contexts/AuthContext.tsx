@@ -1,6 +1,13 @@
+/* @refresh reset */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createContext, useState, type ReactNode } from "react"
+import {
+  createContext,
+  useState,
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+} from "react"
 import type Usuario from "../models/Usuario"
 import type UsuarioLogin from "../models/UsuarioLogin"
 import { login } from "../services/Service"
@@ -15,6 +22,7 @@ interface AuthContextProps {
   handleLogout(): void
   handleLogin(usuarioLogin: UsuarioLogin): Promise<void>
   isLoading: boolean
+  setUsuario: Dispatch<SetStateAction<UsuarioComToken>> // 👈 Adicionado aqui na tipagem
 }
 
 interface AuthProviderProps {
@@ -67,7 +75,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ usuario, handleLogin, handleLogout, isLoading }}
+      // Expondo o setUsuario globalmente para o GoogleSuccess usar ⬇️
+      value={{ usuario, handleLogin, handleLogout, isLoading, setUsuario }}
     >
       {children}
     </AuthContext.Provider>

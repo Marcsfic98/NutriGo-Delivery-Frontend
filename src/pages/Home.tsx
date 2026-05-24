@@ -12,6 +12,7 @@ import {
   Star,
   Store,
 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import "swiper/css"
 import "swiper/css/navigation"
 
@@ -74,6 +75,8 @@ export function Home() {
       slide.style.opacity = `${opacity}`
     })
   }
+
+  const navigate = useNavigate()
 
   const metrics = [
     { value: "+1.200", label: "Deliveries Parceiros" },
@@ -139,10 +142,16 @@ export function Home() {
             nutricionais avançados.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <button className="inline-flex items-center gap-2 rounded-full bg-yellow-500 px-6 py-3.5 font-bold text-gray-950 shadow-lg transition hover:scale-105 hover:bg-yellow-400">
+            <button
+              onClick={() => navigate("/cadastro")}
+              className="inline-flex items-center gap-2 rounded-full bg-yellow-500 px-6 py-3.5 font-bold text-gray-950 shadow-lg transition hover:scale-105 hover:bg-yellow-400"
+            >
               Cadastrar Minha Empresa <ArrowRight className="h-4 w-4" />
             </button>
-            <button className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 font-bold text-white backdrop-blur-md transition hover:bg-white/20">
+            <button
+              onClick={() => navigate("/produtos")}
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 font-bold text-white backdrop-blur-md transition hover:bg-white/20"
+            >
               Explorar Pratos Saudáveis
             </button>
           </div>
