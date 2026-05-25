@@ -102,7 +102,10 @@ function Carrinho() {
                   <h4 className="text-lg font-black text-zinc-800">
                     {item.produto.nome}
                   </h4>
-                  <p className="text-sm font-bold text-zinc-400">
+                  <p className="text-sm font-semibold text-zinc-600">
+                    {item.produto.estabelecimento?.nome}
+                  </p>
+                  <p className="mt-3 text-sm font-bold text-zinc-400">
                     {item.quantidade}x • {formatarMoeda(item.preco_unitario)}
                   </p>
                 </div>

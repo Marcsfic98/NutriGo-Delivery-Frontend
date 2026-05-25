@@ -101,7 +101,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error(error)
-      ToastAlerta("Erro ao salvar os itens do pedido.", "erro")
+      ToastAlerta(
+        "Nao e possivel finalizar pois tem produtos de lojas diferentes.",
+        "info",
+      )
+      // ToastAlerta("Erro ao salvar os itens do pedido.", "erro")
       throw error
     }
   }
