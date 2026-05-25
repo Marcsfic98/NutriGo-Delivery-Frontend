@@ -273,6 +273,7 @@ function PageEstabelecimento() {
           produto={{
             ...selectedProduct,
             categoriaNome: selectedProduct.categoria?.nome || "Sem Categoria",
+            estabelecimento: estabelecimento, // 👈 INJETA O ESTADO DA PÁGINA AQUI DENTRO!
           }}
           onClose={() => setSelectedProduct(null)}
         />
