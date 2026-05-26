@@ -1,9 +1,11 @@
-import axios from "axios";
-import type Pedido from "../models/Pedido";
-import { atualizar, cadastrar, deletar } from "./Service";
+import axios from "axios"
+import type Pedido from "../models/Pedido"
+import { atualizar, cadastrar, deletar } from "./Service"
 
 const api = axios.create({
   baseURL:
+    // "http://localhost:4000",
+
     "https://aplicativo-de-delivery-backend.onrender.com",
 })
 
@@ -13,7 +15,10 @@ const authHeader = (token: string) => ({
   },
 })
 
-export async function buscarPedidos(token: string, setDados: (dados: Pedido[]) => void) {
+export async function buscarPedidos(
+  token: string,
+  setDados: (dados: Pedido[]) => void,
+) {
   const resposta = await api.get<Pedido[]>("/pedidos", authHeader(token))
   setDados(resposta.data)
 }
@@ -21,18 +26,28 @@ export async function buscarPedidos(token: string, setDados: (dados: Pedido[]) =
 export async function buscarPedidoPorId(
   id: number,
   token: string,
-  setDados: (dados: Pedido) => void
+  setDados: (dados: Pedido) => void,
 ) {
   const resposta = await api.get<Pedido>(`/pedidos/${id}`, authHeader(token))
   setDados(resposta.data)
 }
 
 export async function cadastrarPedido(token: string, pedido: Pedido) {
-  await cadastrar("/pedidos/cadastrar", pedido, () => undefined, authHeader(token))
+  await cadastrar(
+    "/pedidos/cadastrar",
+    pedido,
+    () => undefined,
+    authHeader(token),
+  )
 }
 
 export async function atualizarPedido(token: string, pedido: Pedido) {
-  await atualizar("/pedidos/atualizar", pedido, () => undefined, authHeader(token))
+  await atualizar(
+    "/pedidos/atualizar",
+    pedido,
+    () => undefined,
+    authHeader(token),
+  )
 }
 
 export async function deletarPedido(token: string, id: number) {
