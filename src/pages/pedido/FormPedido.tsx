@@ -20,11 +20,11 @@ import {
   cadastrarPedido,
 } from "../../services/PedidoService"
 
-const authHeader = (token: string) => ({
-  headers: {
-    Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
-  },
-})
+// const authHeader = (token: string) => ({
+//   headers: {
+//     Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
+//   },
+// })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extrairId(entidade: any): number {
@@ -83,10 +83,7 @@ function FormPedido() {
                   extrairId(dadosPedido.estabelecimento) ||
                   usuario.estabelecimento?.id ||
                   0,
-                nome:
-                  dadosPedido.estabelecimento?.nome ||
-                  usuario.estabelecimento?.nome ||
-                  "",
+                nome: usuario.estabelecimento?.nome || "",
               } as Estabelecimento,
             })
           },
