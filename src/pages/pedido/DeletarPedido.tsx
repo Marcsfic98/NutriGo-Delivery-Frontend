@@ -2,9 +2,9 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext"
 import type Pedido from "../../models/Pedido"
-import { buscarPedidoPorId, deletarPedido } from "../../services/PedidoService"
 import { ToastAlerta } from "../../util/ToastAlerta"
 import { classeStatusBadge, formatarMoeda } from "./pedidoUtils"
+import { buscarPedidoPorId, deletarPedido } from "../../services/PedidoService"
 
 function DeletarPedido() {
   const navigate = useNavigate()
@@ -59,7 +59,7 @@ function DeletarPedido() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] bg-gradient-to-b from-rose-50/70 via-white to-white pb-16 pt-32">
+    <div className="min-h-[calc(100vh-8rem)] bg-gradient-to-b from-rose-50/70 via-white to-white pt-32 pb-16">
       <div className="mx-auto w-full max-w-2xl px-4">
         <section className="overflow-hidden rounded-3xl border border-rose-100 bg-white shadow-sm">
           <header className="bg-gradient-to-r from-rose-600 to-rose-500 px-6 py-6 text-white sm:px-8">
@@ -67,16 +67,20 @@ function DeletarPedido() {
               {"Confirmar exclusão"}
             </h1>
             <p className="mt-2 text-sm text-rose-100">
-              {"Esta ação remove o pedido permanentemente e não pode ser desfeita."}
+              {
+                "Esta ação remove o pedido permanentemente e não pode ser desfeita."
+              }
             </p>
           </header>
 
           <div className="space-y-5 p-6 sm:p-8">
             <div className="rounded-2xl border border-rose-100 bg-rose-50/70 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-rose-500">
+              <p className="text-xs font-semibold tracking-wide text-rose-500 uppercase">
                 Pedido
               </p>
-              <p className="mt-2 text-xl font-black text-zinc-800">#{pedido.id}</p>
+              <p className="mt-2 text-xl font-black text-zinc-800">
+                #{pedido.id}
+              </p>
 
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <span

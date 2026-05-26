@@ -11,27 +11,21 @@ import { ClipLoader } from "react-spinners"
 import { AuthContext } from "../../contexts/AuthContext"
 import type Estabelecimento from "../../models/Estabelecimento"
 import type Pedido from "../../models/Pedido"
+
+import { ToastAlerta } from "../../util/ToastAlerta"
+import { statusOptions } from "./pedidoUtils"
 import {
   atualizarPedido,
   buscarPedidoPorId,
   cadastrarPedido,
 } from "../../services/PedidoService"
-import { buscar } from "../../services/Service"
-import { ToastAlerta } from "../../util/ToastAlerta"
-import { statusOptions } from "./pedidoUtils"
 
-/**
- * Define o cabeçalho de autenticação tipado
- */
 const authHeader = (token: string) => ({
   headers: {
     Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
   },
 })
 
-/**
- * Extrai o ID de forma segura para o TypeScript
- */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extrairId(entidade: any): number {
   if (entidade && typeof entidade === "object" && "id" in entidade) {
@@ -43,23 +37,23 @@ function extrairId(entidade: any): number {
 function FormPedido() {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+
+  // Pegando o usuario (e o estabelecimento atrelado a ele) do Contexto
   const { usuario, handleLogout } = useContext(AuthContext)
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [estabelecimentos, setEstabelecimentos] = useState<Estabelecimento[]>(
-    [],
-  )
-  const [carregandoEstabelecimentos, setCarregandoEstabelecimentos] =
-    useState<boolean>(false)
 
-  // Estado inicial do Pedido rigorosamente tipado
+  // Estado inicial: o estabelecimento já puxa o ID diretamente do usuário logado
   const [pedido, setPedido] = useState<Pedido>({
     id: id ? Number(id) : undefined,
     valor_total: 0,
     status: statusOptions[0] as Pedido["status"],
     data_pedido: new Date().toISOString(),
     usuario: { id: usuario.id },
-    estabelecimento: { id: 0 } as Estabelecimento,
+    estabelecimento: {
+      id: usuario.estabelecimento?.id || 0,
+      nome: usuario.estabelecimento?.nome || "",
+    } as Estabelecimento,
   })
 
   useEffect(() => {
@@ -70,44 +64,42 @@ function FormPedido() {
     }
 
     async function carregarDados() {
-      try {
-        setCarregandoEstabelecimentos(true)
-        // Busca estabelecimentos para o Select
-        await buscar(
-          "/estabelecimentos",
-          setEstabelecimentos,
-          authHeader(usuario.token),
-        )
+      // Se não for edição, não precisa buscar nada no servidor, pois o ID do estabelecimento já foi pego do login
+      if (!id) return
 
-        // Se for edição, busca os dados do pedido
-        if (id) {
-          await buscarPedidoPorId(
-            Number(id),
-            usuario.token,
-            (dadosPedido: Pedido) => {
-              setPedido({
-                ...dadosPedido,
-                valor_total: Number(dadosPedido.valor_total) || 0,
-                usuario: { id: extrairId(dadosPedido.usuario) || usuario.id },
-                estabelecimento: {
-                  id: extrairId(dadosPedido.estabelecimento),
-                } as Estabelecimento,
-              })
-            },
-          )
-        }
+      try {
+        // Se for edição, busca os dados do pedido original
+        await buscarPedidoPorId(
+          Number(id),
+          usuario.token,
+          (dadosPedido: Pedido) => {
+            setPedido({
+              ...dadosPedido,
+              valor_total: Number(dadosPedido.valor_total) || 0,
+              usuario: { id: extrairId(dadosPedido.usuario) || usuario.id },
+              // Garante que mantém o estabelecimento correto do pedido ou do usuário
+              estabelecimento: {
+                id:
+                  extrairId(dadosPedido.estabelecimento) ||
+                  usuario.estabelecimento?.id ||
+                  0,
+                nome:
+                  dadosPedido.estabelecimento?.nome ||
+                  usuario.estabelecimento?.nome ||
+                  "",
+              } as Estabelecimento,
+            })
+          },
+        )
       } catch (error) {
         console.error(error)
-        ToastAlerta("Erro ao carregar dados iniciais", "erro")
-      } finally {
-        setCarregandoEstabelecimentos(false)
+        ToastAlerta("Erro ao carregar dados do pedido", "erro")
       }
     }
 
     carregarDados()
-  }, [id, usuario.token, usuario.id, navigate])
+  }, [id, usuario.token, usuario.id, usuario.estabelecimento, navigate])
 
-  // Handlers com tipagem de eventos do React
   function handleValorTotal(e: ChangeEvent<HTMLInputElement>) {
     const valor = e.target.value === "" ? 0 : Number(e.target.value)
     setPedido((prev) => ({ ...prev, valor_total: valor }))
@@ -120,20 +112,12 @@ function FormPedido() {
     }))
   }
 
-  function handleEstabelecimento(e: ChangeEvent<HTMLSelectElement>) {
-    const estId = Number(e.target.value)
-    setPedido((prev) => ({
-      ...prev,
-      estabelecimento: { id: estId } as Estabelecimento,
-    }))
-  }
-
   async function salvarPedido(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsLoading(true)
 
     if (pedido.estabelecimento?.id === 0) {
-      ToastAlerta("Selecione um estabelecimento.", "info")
+      ToastAlerta("Estabelecimento não identificado para este usuário.", "erro")
       setIsLoading(false)
       return
     }
@@ -219,29 +203,20 @@ function FormPedido() {
           </div>
         </div>
 
-        {/* ESTABELECIMENTO */}
-        <div className="flex flex-col gap-1">
+        {/* ESTABELECIMENTO (AGORA BLOQUEADO APENAS PARA O LOGADO) */}
+        <div className="flex hidden flex-col gap-1">
           <label className="text-xs font-black text-slate-500 uppercase">
-            Onde pedir?
+            Estabelecimento Vinculado
           </label>
-          <select
-            value={pedido.estabelecimento?.id || ""}
-            onChange={handleEstabelecimento}
-            className="rounded-xl border border-slate-200 bg-white p-3 focus:border-lime-500 focus:outline-none disabled:opacity-50"
-            required
-            disabled={carregandoEstabelecimentos}
-          >
-            <option value="" disabled>
-              {carregandoEstabelecimentos
-                ? "Buscando lojas..."
-                : "Selecione um estabelecimento"}
-            </option>
-            {estabelecimentos.map((est) => (
-              <option key={est.id} value={est.id}>
-                {est.nome}
-              </option>
-            ))}
-          </select>
+          <input
+            type="text"
+            // Mostra o Nome do estabelecimento ou o ID caso o nome não exista
+            value={
+              pedido.estabelecimento?.id || `ID: ${pedido.estabelecimento?.id}`
+            }
+            disabled
+            className="cursor-not-allowed rounded-xl border border-slate-100 bg-slate-50 p-3 text-slate-400"
+          />
         </div>
 
         {/* AÇÕES */}
