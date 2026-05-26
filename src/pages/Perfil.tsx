@@ -54,7 +54,6 @@ export function Perfil() {
         (res: Usuario) => setUsuarioCompleto(res),
         { headers: { Authorization: usuario.token } },
       )
-      console.log(usuarioCompleto)
     } catch (error) {
       console.error("Erro ao carregar dados do perfil:", error)
     }

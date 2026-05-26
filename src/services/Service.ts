@@ -17,13 +17,11 @@ export const cadastrarUsuario = async (
   setDados: Function,
 ) => {
   const resposta = await api.post(url, dados)
-  console.log(resposta.data)
   setDados(resposta.data)
 }
 
 export const login = async (url: string, dados: Object, setDados: Function) => {
   const resposta = await api.post(url, dados)
-  console.log(resposta.data)
   setDados(resposta.data)
 }
 
@@ -35,7 +33,6 @@ export const buscar = async (
 ) => {
   const resposta = await api.get(url, header)
   setDados(resposta.data)
-  console.log(resposta.data)
   return(resposta.data)
   
 }

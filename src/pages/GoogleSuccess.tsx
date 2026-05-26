@@ -54,11 +54,6 @@ export function GoogleSuccess() {
           ? parseInt(idDaUrl, 10)
           : 0
 
-      console.log("=== [GOOGLE OAUTH] DECODIFICAÇÃO DE SEGURANÇA ===")
-      console.log("ID extraído do JWT:", idDoToken)
-      console.log("ID extraído da URL:", idDaUrl)
-      console.log("ID final que será gravado:", idFinal)
-
       const dadosUsuario = {
         id: isNaN(idFinal) ? 0 : idFinal,
         nome: decodeURIComponent(nome || ""),
@@ -70,11 +65,6 @@ export function GoogleSuccess() {
         estabelecimento: null,
         token: token,
       }
-
-      console.log(
-        "=== [GOOGLE OAUTH] GRAVANDO NO LOCALSTORAGE ===",
-        dadosUsuario,
-      )
 
       setUsuario(dadosUsuario)
 
